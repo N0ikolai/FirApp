@@ -22,12 +22,27 @@
 <body>
     <div class="app-bg"></div>
     <div class="app-container">
+        <!-- Deload Banner -->
+        <div class="deload-banner glass-panel" id="deload-banner" style="display:none;">
+            <span class="deload-icon">🔻</span>
+            <span class="deload-text">Неделя разгрузки — веса снижены на 20%</span>
+        </div>
+
+        <!-- Readiness Badge -->
+        <div class="readiness-badge glass-panel" id="readiness-badge" style="display:none;">
+            <span class="readiness-icon">⚡</span>
+            <span class="readiness-text" id="readiness-text">Готовность: —</span>
+        </div>
+
         <!-- Header -->
         <header class="header glass-panel">
             <div class="header-left">
                 <h1 class="logo">💪 Умный Трекер</h1>
             </div>
             <div class="header-right">
+                <button class="btn btn-icon" id="btn-tonnage" title="Тоннаж">
+                    <span class="btn-emoji">📈</span>
+                </button>
                 <button class="btn btn-icon" id="btn-history" title="История">
                     <span class="btn-emoji">📊</span>
                 </button>
@@ -70,13 +85,49 @@
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal glass-panel" id="modal">
                 <div class="modal-header">
-                    <h2>📊 История тренировок</h2>
+                    <h2 id="modal-title">📊 История тренировок</h2>
                     <button class="btn btn-icon modal-close" id="modal-close">
                         <span class="btn-emoji">✕</span>
                     </button>
                 </div>
                 <div class="modal-body" id="modal-body">
-                    <!-- History content rendered by JS -->
+                    <!-- Content rendered by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Readiness Check Modal -->
+        <div class="modal-overlay" id="readiness-overlay">
+            <div class="modal glass-panel readiness-modal" id="readiness-modal">
+                <div class="modal-header">
+                    <h2>⚡ Проверка готовности</h2>
+                </div>
+                <div class="modal-body readiness-body">
+                    <p class="readiness-description">Оцените ваше состояние перед тренировкой</p>
+
+                    <div class="readiness-question">
+                        <label class="readiness-label">😴 Как вы спали? (1 — плохо, 5 — отлично)</label>
+                        <div class="readiness-buttons" id="sleep-buttons">
+                            <button class="readiness-btn" data-value="1">1</button>
+                            <button class="readiness-btn" data-value="2">2</button>
+                            <button class="readiness-btn" data-value="3">3</button>
+                            <button class="readiness-btn" data-value="4">4</button>
+                            <button class="readiness-btn" data-value="5">5</button>
+                        </div>
+                    </div>
+
+                    <div class="readiness-question">
+                        <label class="readiness-label">😰 Уровень стресса (1 — низкий, 5 — высокий)</label>
+                        <div class="readiness-buttons" id="stress-buttons">
+                            <button class="readiness-btn" data-value="1">1</button>
+                            <button class="readiness-btn" data-value="2">2</button>
+                            <button class="readiness-btn" data-value="3">3</button>
+                            <button class="readiness-btn" data-value="4">4</button>
+                            <button class="readiness-btn" data-value="5">5</button>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary readiness-submit" id="readiness-submit" disabled>Начать тренировку</button>
                 </div>
             </div>
         </div>

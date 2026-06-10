@@ -1,4 +1,3 @@
-// ===== WORKOUT DATA =====
 const WORKOUT_DATA = [
   {
     id: "day1", title: "Ноги и Плечи", label: "День 1",
@@ -44,6 +43,7 @@ const WORKOUT_DATA = [
 // ===== STATE =====
 let activeDay = localStorage.getItem('activeDay') || 'day1';
 let todayDone = JSON.parse(localStorage.getItem('todayDone') || '{}');
+let sessionRpe = {}; // Temporary RPE values for current session
 
 // ===== DOM ELEMENTS =====
 const grid = document.getElementById('exercises-grid');
@@ -54,9 +54,16 @@ const themeIcon = document.getElementById('theme-icon');
 const btnCsv = document.getElementById('btn-csv');
 const btnReset = document.getElementById('btn-reset');
 const btnHistory = document.getElementById('btn-history');
+const btnTonnage = document.getElementById('btn-tonnage');
 const modalOverlay = document.getElementById('modal-overlay');
 const modalClose = document.getElementById('modal-close');
 const modalBody = document.getElementById('modal-body');
+const modalTitle = document.getElementById('modal-title');
+const readinessOverlay = document.getElementById('readiness-overlay');
+const readinessSubmit = document.getElementById('readiness-submit');
+const deloadBanner = document.getElementById('deload-banner');
+const readinessBadge = document.getElementById('readiness-badge');
+const readinessTextEl = document.getElementById('readiness-text');
 
 // ===== THEME =====
 function initTheme() {
@@ -73,16 +80,164 @@ function toggleTheme() {
   themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
 }
 
+// ===== DELOAD SYSTEM =====
+function getTrainingWeeks() {
+  return parseInt(localStorage.getItem('training_weeks') || '0', 10);
+}
+
+function setTrainingWeeks(count) {
+  localStorage.setItem('training_weeks', String(count));
+}
+
+function getLastTrainingWeek() {
+  return localStorage.getItem('last_training_week') || '';
+}
+
+function getCurrentWeekId() {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const weekNum = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return `${now.getFullYear()}-W${weekNum}`;
+}
+
+function isDeloadWeek() {
+  return getTrainingWeeks() >= 3;
+}
+
+function checkAndUpdateWeek() {
+  const currentWeek = getCurrentWeekId();
+  const lastWeek = getLastTrainingWeek();
+
+  if (currentWeek !== lastWeek) {
+    localStorage.setItem('last_training_week', currentWeek);
+    const weeks = getTrainingWeeks();
+    if (weeks >= 3) {
+      // Deload week just finished, reset counter
+      setTrainingWeeks(0);
+    } else {
+      setTrainingWeeks(weeks + 1);
+    }
+  }
+}
+
+function getDeloadMultiplier() {
+  return isDeloadWeek() ? 0.8 : 1.0;
+}
+
+function updateDeloadBanner() {
+  if (isDeloadWeek()) {
+    deloadBanner.style.display = 'flex';
+  } else {
+    deloadBanner.style.display = 'none';
+  }
+}
+
+// ===== READINESS CHECK =====
+function getTodayDateStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getReadiness() {
+  const raw = localStorage.getItem('readiness_data');
+  return raw ? JSON.parse(raw) : null;
+}
+
+function getTodayReadiness() {
+  const data = getReadiness();
+  if (data && data.date === getTodayDateStr()) {
+    return data;
+  }
+  return null;
+}
+
+function saveReadiness(sleep, stress) {
+  const data = { sleep, stress, date: getTodayDateStr() };
+  localStorage.setItem('readiness_data', JSON.stringify(data));
+  return data;
+}
+
+function isReadinessPoor(readiness) {
+  if (!readiness) return false;
+  return readiness.sleep <= 2 || readiness.stress >= 4;
+}
+
+function getReadinessMultiplier() {
+  const r = getTodayReadiness();
+  return isReadinessPoor(r) ? 0.85 : 1.0;
+}
+
+function updateReadinessBadge() {
+  const r = getTodayReadiness();
+  if (!r) {
+    readinessBadge.style.display = 'none';
+    return;
+  }
+  readinessBadge.style.display = 'flex';
+  const poor = isReadinessPoor(r);
+  readinessBadge.classList.toggle('poor', poor);
+  readinessBadge.classList.toggle('good', !poor);
+  if (poor) {
+    readinessTextEl.textContent = `Готовность: низкая (сон: ${r.sleep}/5, стресс: ${r.stress}/5) — веса -15%`;
+  } else {
+    readinessTextEl.textContent = `Готовность: хорошая (сон: ${r.sleep}/5, стресс: ${r.stress}/5)`;
+  }
+}
+
+function showReadinessCheck() {
+  const today = getTodayReadiness();
+  if (today) {
+    // Already checked today
+    updateReadinessBadge();
+    return;
+  }
+  readinessOverlay.classList.add('active');
+}
+
+function initReadinessModal() {
+  let selectedSleep = 0;
+  let selectedStress = 0;
+
+  const sleepBtns = document.querySelectorAll('#sleep-buttons .readiness-btn');
+  const stressBtns = document.querySelectorAll('#stress-buttons .readiness-btn');
+
+  sleepBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sleepBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSleep = parseInt(btn.dataset.value, 10);
+      readinessSubmit.disabled = !(selectedSleep > 0 && selectedStress > 0);
+    });
+  });
+
+  stressBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      stressBtns.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedStress = parseInt(btn.dataset.value, 10);
+      readinessSubmit.disabled = !(selectedSleep > 0 && selectedStress > 0);
+    });
+  });
+
+  readinessSubmit.addEventListener('click', () => {
+    if (selectedSleep > 0 && selectedStress > 0) {
+      saveReadiness(selectedSleep, selectedStress);
+      readinessOverlay.classList.remove('active');
+      updateReadinessBadge();
+      renderExercises();
+    }
+  });
+}
+
 // ===== ADAPTIVE WEIGHT ALGORITHM =====
 function getHistory(exId) {
   const raw = localStorage.getItem(`workout_log_${exId}`);
   return raw ? JSON.parse(raw) : [];
 }
 
-function saveToHistory(exId, weight, reps) {
+function saveToHistory(exId, weight, reps, rpe) {
   const history = getHistory(exId);
-  history.push({ weight, reps, date: new Date().toISOString() });
-  // Keep last 50 entries1
+  history.push({ weight, reps, rpe, date: new Date().toISOString() });
+  // Keep last 50 entries
   if (history.length > 50) history.splice(0, history.length - 50);
   localStorage.setItem(`workout_log_${exId}`, JSON.stringify(history));
 }
@@ -93,13 +248,30 @@ function suggestNextWeight(exId, targetReps) {
   const last = history[history.length - 1];
   const lastWeight = last.weight;
   const lastReps = last.reps;
+  const lastRpe = last.rpe || 0;
 
-  if (lastReps >= targetReps) {
-    return lastWeight + 2.5;
+  let suggested = lastWeight;
+
+  // RPE-based logic: if RPE >= 9, don't increase even if target reps hit
+  if (lastRpe >= 10) {
+    // Complete failure - suggest same or slightly less
+    suggested = lastWeight;
+  } else if (lastRpe >= 9) {
+    // Very hard - don't increase
+    suggested = lastWeight;
+  } else if (lastReps >= targetReps) {
+    suggested = lastWeight + 2.5;
   } else if (lastReps <= targetReps - 3) {
-    return Math.max(0, lastWeight - 2.5);
+    suggested = Math.max(0, lastWeight - 2.5);
   }
-  return lastWeight;
+
+  // Apply deload multiplier
+  suggested = Math.round((suggested * getDeloadMultiplier()) * 2) / 2;
+
+  // Apply readiness multiplier
+  suggested = Math.round((suggested * getReadinessMultiplier()) * 2) / 2;
+
+  return suggested;
 }
 
 // ===== PLATEAU DETECTION =====
@@ -117,6 +289,105 @@ function getRandomAlternative(alternatives) {
   return alternatives[Math.floor(Math.random() * alternatives.length)];
 }
 
+// ===== TONNAGE CALCULATION =====
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  d.setDate(diff);
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString().slice(0, 10);
+}
+
+function calculateWeeklyTonnage() {
+  const tonnageByMuscle = {};
+  const weeklyData = {};
+
+  Object.entries(MUSCLE_GROUPS).forEach(([muscle, info]) => {
+    tonnageByMuscle[muscle] = { label: info.label, weeks: {} };
+
+    info.ids.forEach(exId => {
+      const history = getHistory(exId);
+      const exData = findExercise(exId);
+      const setsNum = exData ? exData.setsNum : 3;
+
+      history.forEach(entry => {
+        const weekStart = getWeekStart(entry.date);
+        if (!tonnageByMuscle[muscle].weeks[weekStart]) {
+          tonnageByMuscle[muscle].weeks[weekStart] = 0;
+        }
+        // Tonnage = weight × reps × sets (assuming 1 log = 1 completed set worth of data)
+        tonnageByMuscle[muscle].weeks[weekStart] += entry.weight * entry.reps * setsNum;
+      });
+    });
+
+    // Get sorted weeks
+    const sortedWeeks = Object.keys(tonnageByMuscle[muscle].weeks).sort();
+    tonnageByMuscle[muscle].sortedWeeks = sortedWeeks;
+    tonnageByMuscle[muscle].values = sortedWeeks.map(w => tonnageByMuscle[muscle].weeks[w]);
+  });
+
+  return tonnageByMuscle;
+}
+
+function findExercise(exId) {
+  for (const day of WORKOUT_DATA) {
+    const found = day.exercises.find(e => e.id === exId);
+    if (found) return found;
+  }
+  return null;
+}
+
+function detectTonnageStagnation(values) {
+  // Stagnation = last 4 weeks have less than 5% variation
+  if (values.length < 4) return false;
+  const last4 = values.slice(-4);
+  const avg = last4.reduce((a, b) => a + b, 0) / 4;
+  if (avg === 0) return false;
+  const maxDev = Math.max(...last4.map(v => Math.abs(v - avg)));
+  return (maxDev / avg) < 0.05;
+}
+
+function showTonnageModal() {
+  const tonnage = calculateWeeklyTonnage();
+  let html = '';
+  let maxTonnage = 0;
+
+  // Find max for bar scaling
+  Object.values(tonnage).forEach(muscle => {
+    const vals = muscle.values;
+    if (vals.length > 0) {
+      maxTonnage = Math.max(maxTonnage, ...vals);
+    }
+  });
+
+  if (maxTonnage === 0) {
+    html = '<div class="history-empty">📭 Нет данных о тоннаже. Выполните тренировки!</div>';
+  } else {
+    const currentWeek = getWeekStart(new Date().toISOString());
+    html += `<p class="tonnage-week-label">Текущая неделя: ${currentWeek}</p>`;
+
+    Object.entries(tonnage).forEach(([muscle, data]) => {
+      const lastValue = data.values.length > 0 ? data.values[data.values.length - 1] : 0;
+      const stagnation = detectTonnageStagnation(data.values);
+      const barWidth = maxTonnage > 0 ? (lastValue / maxTonnage) * 100 : 0;
+
+      html += `<div class="tonnage-section">
+        <div class="tonnage-muscle-title">${data.label}</div>
+        <div class="tonnage-value">Последняя неделя: ${Math.round(lastValue).toLocaleString('ru-RU')} кг</div>
+        <div class="tonnage-bar-wrapper">
+          <div class="tonnage-bar-fill" style="width: ${barWidth}%"></div>
+        </div>
+        ${stagnation ? '<div class="tonnage-stagnation">⚠️ Тоннаж стагнирует 4+ недели. Попробуйте увеличить количество подходов или сменить упражнения.</div>' : ''}
+      </div>`;
+    });
+  }
+
+  modalTitle.textContent = '📈 Недельный тоннаж';
+  modalBody.innerHTML = html;
+  modalOverlay.classList.add('active');
+}
+
 // ===== RENDER EXERCISES =====
 function renderExercises() {
   const dayData = WORKOUT_DATA.find(d => d.id === activeDay);
@@ -129,7 +400,7 @@ function renderExercises() {
     const plateau = detectPlateau(ex.id);
     const isDone = todayDone[ex.id] || false;
     const history = getHistory(ex.id);
-    const lastEntry = history.length > 0 ? history[history.length - 1] : null;
+    const currentRpe = sessionRpe[ex.id] || 0;
 
     const card = document.createElement('div');
     card.className = `exercise-card${isDone ? ' done' : ''}`;
@@ -143,8 +414,20 @@ function renderExercises() {
 
     let suggestionHtml = '';
     if (suggested > 0) {
-      suggestionHtml = `<div class="suggestion-badge">🤖 Рекомендация: ${suggested} кг</div>`;
+      let label = `🤖 Рекомендация: ${suggested} кг`;
+      if (isDeloadWeek()) label += ' (разгрузка)';
+      if (isReadinessPoor(getTodayReadiness())) label += ' (↓готовность)';
+      suggestionHtml = `<div class="suggestion-badge">${label}</div>`;
     }
+
+    // RPE buttons HTML
+    let rpeHtml = '<div class="rpe-section"><div class="rpe-label">RPE (нагрузка)</div><div class="rpe-buttons">';
+    for (let i = 1; i <= 10; i++) {
+      const activeClass = currentRpe === i ? ' active' : '';
+      const levelClass = i >= 10 ? ' rpe-max' : (i >= 8 ? ' rpe-high' : '');
+      rpeHtml += `<button class="rpe-btn${activeClass}${levelClass}" data-rpe="${i}">${i}</button>`;
+    }
+    rpeHtml += '</div></div>';
 
     card.innerHTML = `
       <div class="card-image-wrapper">
@@ -160,9 +443,10 @@ function renderExercises() {
         </div>
         <div class="input-group">
           <label class="input-label">Повторения</label>
-          <input type="number" class="input-field input-reps" placeholder="${ex.targetReps}" min="0" step="1" value="${lastEntry && !isDone ? '' : ''}">
+          <input type="number" class="input-field input-reps" placeholder="${ex.targetReps}" min="0" step="1">
         </div>
       </div>
+      ${rpeHtml}
       <div class="checkbox-wrapper">
         <input type="checkbox" class="custom-checkbox cb-done" id="cb-${ex.id}" ${isDone ? 'checked' : ''}>
         <label class="checkbox-label" for="cb-${ex.id}">Выполнено</label>
@@ -177,6 +461,16 @@ function renderExercises() {
     img.addEventListener('error', () => {
       img.classList.add('hidden');
       fallback.classList.remove('hidden');
+    });
+
+    // RPE buttons event
+    const rpeBtns = card.querySelectorAll('.rpe-btn');
+    rpeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        rpeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        sessionRpe[ex.id] = parseInt(btn.dataset.rpe, 10);
+      });
     });
 
     // Checkbox event
@@ -199,9 +493,10 @@ function handleDone(ex, card, checkbox) {
   if (checkbox.checked) {
     const weight = parseFloat(weightInput.value) || 0;
     const reps = parseInt(repsInput.value) || 0;
+    const rpe = sessionRpe[ex.id] || 0;
 
     if (weight > 0 && reps > 0) {
-      saveToHistory(ex.id, weight, reps);
+      saveToHistory(ex.id, weight, reps, rpe);
     }
 
     todayDone[ex.id] = true;
@@ -248,7 +543,7 @@ function initTabs() {
 
 // ===== CSV EXPORT =====
 function exportCSV() {
-  let csv = 'Дата,Упражнение,Вес (кг),Повторения\n';
+  let csv = 'Дата,Упражнение,Вес (кг),Повторения,RPE\n';
   let hasData = false;
 
   WORKOUT_DATA.forEach(day => {
@@ -257,7 +552,8 @@ function exportCSV() {
       history.forEach(entry => {
         hasData = true;
         const date = new Date(entry.date).toLocaleDateString('ru-RU');
-        csv += `${date},"${ex.name}",${entry.weight},${entry.reps}\n`;
+        const rpe = entry.rpe || '-';
+        csv += `${date},"${ex.name}",${entry.weight},${entry.reps},${rpe}\n`;
       });
     });
   });
@@ -287,6 +583,7 @@ function resetDay() {
 
   dayData.exercises.forEach(ex => {
     delete todayDone[ex.id];
+    delete sessionRpe[ex.id];
   });
   localStorage.setItem('todayDone', JSON.stringify(todayDone));
   renderExercises();
@@ -308,9 +605,10 @@ function showHistory() {
           const date = new Date(entry.date).toLocaleDateString('ru-RU', {
             day: 'numeric', month: 'short', year: 'numeric'
           });
+          const rpeStr = entry.rpe ? `<span class="history-rpe">RPE: ${entry.rpe}</span>` : '';
           html += `<div class="history-item">
             <div class="history-date">${date}</div>
-            <div>${ex.name} — ${entry.weight} кг × ${entry.reps} повт.</div>
+            <div>${ex.name} — ${entry.weight} кг × ${entry.reps} повт.${rpeStr}</div>
           </div>`;
         });
       }
@@ -321,6 +619,7 @@ function showHistory() {
     html = '<div class="history-empty">📭 История пуста. Начните тренировку!</div>';
   }
 
+  modalTitle.textContent = '📊 История тренировок';
   modalBody.innerHTML = html;
   modalOverlay.classList.add('active');
 }
@@ -334,6 +633,7 @@ btnTheme.addEventListener('click', toggleTheme);
 btnCsv.addEventListener('click', exportCSV);
 btnReset.addEventListener('click', resetDay);
 btnHistory.addEventListener('click', showHistory);
+btnTonnage.addEventListener('click', showTonnageModal);
 modalClose.addEventListener('click', closeModal);
 modalOverlay.addEventListener('click', (e) => {
   if (e.target === modalOverlay) closeModal();
@@ -341,10 +641,17 @@ modalOverlay.addEventListener('click', (e) => {
 
 // Close modal on Escape
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+    readinessOverlay.classList.remove('active');
+  }
 });
 
 // ===== INIT =====
 initTheme();
+checkAndUpdateWeek();
+updateDeloadBanner();
+initReadinessModal();
 initTabs();
 renderExercises();
+showReadinessCheck();
