@@ -3,40 +3,40 @@ const WORKOUT_DATA = [
   {
     id: "day1", title: "Ноги и Плечи", label: "День 1",
     exercises: [
-      { id: "squat", name: "Приседания со штангой", sets: "4 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?w=600&h=400&fit=crop", emoji: "🏋️", alternatives: ["Фронтальные приседания", "Приседания в Смите"] },
-      { id: "legpress", name: "Жим ногами", sets: "4 × 10–15", targetReps: 15, src: "https://images.unsplash.com/photo-1434608519344-49d77a699e1d?w=600&h=400&fit=crop", emoji: "🦵", alternatives: ["Выпады с гантелями"] },
-      { id: "legext", name: "Разгибания ног сидя", sets: "3 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop", emoji: "🦵", alternatives: ["Сисси-приседания"] },
-      { id: "legcurl", name: "Сгибания ног лёжа", sets: "3 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1597347316205-36f6c451902a?w=600&h=400&fit=crop", emoji: "🦵", alternatives: ["Мертвая тяга с гантелями"] },
-      { id: "ohpress", name: "Армейский жим стоя", sets: "4 × 8–12", targetReps: 12, src: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&h=400&fit=crop", emoji: "🏋️", alternatives: ["Жим гантелей стоя"] },
-      { id: "dbpress", name: "Жим гантелей сидя", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Жим Арнольда"] },
-      { id: "lateral", name: "Махи гантелями в стороны", sets: "4 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Тяга нижнего блока в сторону"] },
-      { id: "uprightrow", name: "Тяга штанги к подбородку", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Махи перед собой"] }
+      { id: "squat", name: "Приседания со штангой", sets: "4 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_squats.jpg", emoji: "🏋️", alternatives: ["Фронтальные приседания", "Приседания в Смите"] },
+      { id: "legpress", name: "Жим ногами", sets: "4 × 10–15", targetReps: 15, src: "images/Legs-and-Shoulders/Leg_press_on_the_machine.jpg", emoji: "🦵", alternatives: ["Выпады с гантелями"] },
+      { id: "legext", name: "Разгибания ног сидя", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Seated_leg_extensions.jpg", emoji: "🦵", alternatives: ["Сисси-приседания"] },
+      { id: "legcurl", name: "Сгибания ног лёжа", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Lying_leg_curls.jpg", emoji: "🦵", alternatives: ["Мертвая тяга с гантелями"] },
+      { id: "ohpress", name: "Армейский жим стоя", sets: "4 × 8–12", targetReps: 12, src: "images/Legs-and-Shoulders/Standing_military_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей стоя"] },
+      { id: "dbpress", name: "Жим гантелей сидя", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Seated_dumbbell_press.jpg", emoji: "💪", alternatives: ["Жим Арнольда"] },
+      { id: "lateral", name: "Махи гантелями в стороны", sets: "4 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Dumbbell_Lateral_Raises.jpg", emoji: "💪", alternatives: ["Тяга нижнего блока в сторону"] },
+      { id: "uprightrow", name: "Тяга штанги к подбородку", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_chin-ups.jpg", emoji: "💪", alternatives: ["Махи перед собой"] }
     ]
   },
   {
     id: "day2", title: "Грудь и Бицепс", label: "День 2",
     exercises: [
-      { id: "benchpress", name: "Жим штанги лёжа", sets: "4 × 8–12", targetReps: 12, src: "https://images.unsplash.com/photo-1534368786749-b63e05c92717?w=600&h=400&fit=crop", emoji: "🏋️", alternatives: ["Жим гантелей лёжа", "Отжимания на брусьях"] },
-      { id: "inclinedb", name: "Жим гантелей на наклонной", sets: "4 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1598268030450-7a476f602edb?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Жим штанги на наклонной"] },
-      { id: "dbfly", name: "Разведение гантелей лёжа", sets: "3 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Сведение рук в тренажере Бабочка"] },
-      { id: "crossover", name: "Сведение рук в кроссовере", sets: "3 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1576678927484-cc907957088c?w=600&h=400&fit=crop", emoji: "🔗", alternatives: ["Пуловер с гантелью"] },
-      { id: "bbcurl", name: "Подъём штанги на бицепс", sets: "4 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1581009137042-c552e485697a?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Подъем EZ-штанги"] },
-      { id: "dbcurl", name: "Подъём гантелей с супинацией", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1586401100295-7a8096fd231a?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Попеременный подъем гантелей"] },
-      { id: "preacher", name: "Скамья Скотта (EZ-штанга)", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?w=600&h=400&fit=crop", emoji: "💪", alternatives: ["Сгибания на нижнем блоке"] },
-      { id: "hammer", name: "«Молотки» с гантелями", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1584466977773-e625c37cdd50?w=600&h=400&fit=crop", emoji: "🔨", alternatives: ["Сгибания с канатом на блоке"] }
+      { id: "benchpress", name: "Жим штанги лёжа", sets: "4 × 8–12", targetReps: 12, src: "images/Chest-and-Biceps/Bench_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей лёжа", "Отжимания на брусьях"] },
+      { id: "inclinedb", name: "Жим гантелей на наклонной", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Incline_Dumbbell_Press.jpg", emoji: "💪", alternatives: ["Жим штанги на наклонной"] },
+      { id: "dbfly", name: "Разведение гантелей лёжа", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Lying_dumbbell_flyes.jpg", emoji: "💪", alternatives: ["Сведение рук в тренажере Бабочка"] },
+      { id: "crossover", name: "Сведение рук в кроссовере", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Crossover_arm_reduction.jpg", emoji: "🔗", alternatives: ["Пуловер с гантелью"] },
+      { id: "bbcurl", name: "Подъём штанги на бицепс", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Barbell_bicep-curl.jpg", emoji: "💪", alternatives: ["Подъем EZ-штанги"] },
+      { id: "dbcurl", name: "Подъём гантелей с супинацией", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell-Supination_Curls.jpg", emoji: "💪", alternatives: ["Попеременный подъем гантелей"] },
+      { id: "preacher", name: "Скамья Скотта (EZ-штанга)", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Scott_Bench_(EZ-bar).jpg", emoji: "💪", alternatives: ["Сгибания на нижнем блоке"] },
+      { id: "hammer", name: "«Молотки» с гантелями", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell_hammer_curls.jpg", emoji: "🔨", alternatives: ["Сгибания с канатом на блоке"] }
     ]
   },
   {
     id: "day3", title: "Спина и Трицепс", label: "День 3",
     exercises: [
-      { id: "pullup", name: "Подтягивания широким хватом", sets: "4 × 8–12", targetReps: 12, src: "https://images.unsplash.com/photo-1598971639058-fab3c3109a00?w=600&h=400&fit=crop", emoji: "🏃", alternatives: ["Тяга верхнего блока широким хватом"] },
-      { id: "bbrow", name: "Тяга штанги в наклоне", sets: "4 × 8–12", targetReps: 12, src: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=600&h=400&fit=crop", emoji: "🏋️", alternatives: ["Тяга Т-грифа"] },
-      { id: "cablerow", name: "Тяга нижнего блока к поясу", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop", emoji: "🔗", alternatives: ["Тяга гантелей лежа на животе"] },
-      { id: "dbrow", name: "Тяга гантели одной рукой", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1603287681836-b174ce5074c2?w=600&h=400&fit=crop&q=80", emoji: "💪", alternatives: ["Тяга в рычажном тренажере"] },
-      { id: "cgbench", name: "Жим узким хватом лёжа", sets: "4 × 8–12", targetReps: 12, src: "https://images.unsplash.com/photo-1534368786749-b63e05c92717?w=600&h=400&fit=crop&q=80", emoji: "🏋️", alternatives: ["Отжимания от скамьи за спиной"] },
-      { id: "skullcrush", name: "Французский жим EZ-штангой", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=600&h=400&fit=crop", emoji: "💀", alternatives: ["Французский жим с гантелями"] },
-      { id: "pushdown", name: "Разгибания на блоке с канатом", sets: "3 × 12–15", targetReps: 15, src: "https://images.unsplash.com/photo-1550345332-09e3ac987658?w=600&h=400&fit=crop", emoji: "🔗", alternatives: ["Разгибания с прямой рукоятью"] },
-      { id: "ohext", name: "Разгибание гантели из-за головы", sets: "3 × 10–12", targetReps: 12, src: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=600&h=400&fit=crop&q=80", emoji: "💪", alternatives: ["Разгибание из-за головы в кроссовере"] }
+      { id: "pullup", name: "Подтягивания широким хватом", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Wide-grip_pull-ups.jpg", emoji: "🏃", alternatives: ["Тяга верхнего блока широким хватом"] },
+      { id: "bbrow", name: "Тяга штанги в наклоне", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Bent-over_barbell_row.jpg", emoji: "🏋️", alternatives: ["Тяга Т-грифа"] },
+      { id: "cablerow", name: "Тяга нижнего блока к поясу", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Low_block_pulldown_to_the_waist.jpg", emoji: "🔗", alternatives: ["Тяга гантелей лежа на животе"] },
+      { id: "dbrow", name: "Тяга гантели одной рукой", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/One-arm dumbbell_row.jpg", emoji: "💪", alternatives: ["Тяга в рычажном тренажере"] },
+      { id: "cgbench", name: "Жим узким хватом лёжа", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Close-grip_bench_press.jpg", emoji: "🏋️", alternatives: ["Отжимания от скамьи за спиной"] },
+      { id: "skullcrush", name: "Французский жим EZ-штангой", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/EZ-Bar_French_Press.jpg", emoji: "💀", alternatives: ["Французский жим с гантелями"] },
+      { id: "pushdown", name: "Разгибания на блоке с канатом", sets: "3 × 12–15", targetReps: 15, src: "images/Back-and-Triceps/Cable_Pushdowns.jpg", emoji: "🔗", alternatives: ["Разгибания с прямой рукоятью"] },
+      { id: "ohext", name: "Разгибание гантели из-за головы", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Overhead_Dumbbell_Extension.jpg", emoji: "💪", alternatives: ["Разгибание из-за головы в кроссовере"] }
     ]
   }
 ];
