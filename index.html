@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link data-mgx-overview="icon" rel="icon" href="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+    <title data-mgx-overview="title">Умный трекер тренировок</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta data-mgx-overview="description" name="description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
+    <meta data-mgx-overview="og:title" property="og:title" content="Умный трекер тренировок" />
+    <meta data-mgx-overview="og:description" property="og:description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
+    <meta data-mgx-overview="og:image" property="og:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+    <meta data-mgx-overview="twitter:title" name="twitter:title" content="Умный трекер тренировок" />
+    <meta data-mgx-overview="twitter:description" name="twitter:description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
+    <meta data-mgx-overview="twitter:image" name="twitter:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
+</head>
+
+<body>
+    <div class="app-bg"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header glass-panel">
+            <div class="header-left">
+                <h1 class="logo">💪 Умный Трекер</h1>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-icon" id="btn-history" title="История">
+                    <span class="btn-emoji">📊</span>
+                </button>
+                <button class="btn btn-icon" id="btn-csv" title="Скачать CSV">
+                    <span class="btn-emoji">📥</span>
+                </button>
+                <button class="btn btn-icon" id="btn-reset" title="Сбросить день">
+                    <span class="btn-emoji">🔄</span>
+                </button>
+                <button class="btn btn-icon" id="btn-theme" title="Сменить тему">
+                    <span class="btn-emoji" id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Day Tabs -->
+        <nav class="day-tabs glass-panel">
+            <button class="tab-btn active" data-day="day1">День 1<span class="tab-sub">Ноги и Плечи</span></button>
+            <button class="tab-btn" data-day="day2">День 2<span class="tab-sub">Грудь и Бицепс</span></button>
+            <button class="tab-btn" data-day="day3">День 3<span class="tab-sub">Спина и Трицепс</span></button>
+        </nav>
+
+        <!-- Progress Bar -->
+        <div class="progress-section glass-panel">
+            <div class="progress-label">
+                <span>Прогресс дня</span>
+                <span id="progress-text">0 / 8</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Exercise Cards -->
+        <main class="exercises-grid" id="exercises-grid">
+            <!-- Cards rendered by JS -->
+        </main>
+
+        <!-- History Modal -->
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal glass-panel" id="modal">
+                <div class="modal-header">
+                    <h2>📊 История тренировок</h2>
+                    <button class="btn btn-icon modal-close" id="modal-close">
+                        <span class="btn-emoji">✕</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- History content rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
