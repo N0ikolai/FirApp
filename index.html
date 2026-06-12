@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="uk" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link data-mgx-overview="icon" rel="icon" href="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
-    <title data-mgx-overview="title">Умный трекер тренировок</title>
+    <title data-mgx-overview="title">FitApp</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <meta data-mgx-overview="description" name="description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
-    <meta data-mgx-overview="og:title" property="og:title" content="Умный трекер тренировок" />
-    <meta data-mgx-overview="og:description" property="og:description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
+    <meta data-mgx-overview="description" name="description" content="Розумний трекер тренувань з адаптивними рекомендаціями ваги та детекцією плато." />
+    <meta data-mgx-overview="og:title" property="og:title" content="Розумний трекер тренувань" />
+    <meta data-mgx-overview="og:description" property="og:description" content="Розумний трекер тренувань з адаптивними рекомендаціями ваги та детекцією плато." />
     <meta data-mgx-overview="og:image" property="og:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
-    <meta data-mgx-overview="twitter:title" name="twitter:title" content="Умный трекер тренировок" />
-    <meta data-mgx-overview="twitter:description" name="twitter:description" content="Умный трекер тренировок с адаптивными рекомендациями веса и детекцией плато." />
+    <meta data-mgx-overview="twitter:title" name="twitter:title" content="Розумний трекер тренувань" />
+    <meta data-mgx-overview="twitter:description" name="twitter:description" content="Розумний трекер тренувань з адаптивними рекомендаціями ваги та детекцією плато." />
     <meta data-mgx-overview="twitter:image" name="twitter:image" content="https://public-frontend-1300249583.cos.ap-nanjing.myqcloud.com/commonfile/DefaultAppLogo.png" />
 </head>
 
@@ -25,34 +25,34 @@
         <!-- Deload Banner -->
         <div class="deload-banner glass-panel" id="deload-banner" style="display:none;">
             <span class="deload-icon">🔻</span>
-            <span class="deload-text">Неделя разгрузки — веса снижены на 20%</span>
+            <span class="deload-text">Тиждень розвантаження ваги -20%</span>
         </div>
 
         <!-- Readiness Badge -->
         <div class="readiness-badge glass-panel" id="readiness-badge" style="display:none;">
             <span class="readiness-icon">⚡</span>
-            <span class="readiness-text" id="readiness-text">Готовность: —</span>
+            <span class="readiness-text" id="readiness-text">Самопочуття: —</span>
         </div>
 
         <!-- Header -->
         <header class="header glass-panel">
             <div class="header-left">
-                <h1 class="logo">💪 Умный Трекер</h1>
+                <h1 class="logo">💪 FitApp</h1>
             </div>
             <div class="header-right">
                 <button class="btn btn-icon" id="btn-tonnage" title="Тоннаж">
                     <span class="btn-emoji">📈</span>
                 </button>
-                <button class="btn btn-icon" id="btn-history" title="История">
+                <button class="btn btn-icon" id="btn-history" title="Історія">
                     <span class="btn-emoji">📊</span>
                 </button>
-                <button class="btn btn-icon" id="btn-csv" title="Скачать CSV">
+                <button class="btn btn-icon" id="btn-csv" title="Завантажити CSV">
                     <span class="btn-emoji">📥</span>
                 </button>
-                <button class="btn btn-icon" id="btn-reset" title="Сбросить день">
+                <button class="btn btn-icon" id="btn-reset" title="Скинути день">
                     <span class="btn-emoji">🔄</span>
                 </button>
-                <button class="btn btn-icon" id="btn-theme" title="Сменить тему">
+                <button class="btn btn-icon" id="btn-theme" title="Змінити тему">
                     <span class="btn-emoji" id="theme-icon">🌙</span>
                 </button>
             </div>
@@ -60,15 +60,15 @@
 
         <!-- Day Tabs -->
         <nav class="day-tabs glass-panel">
-            <button class="tab-btn active" data-day="day1">День 1<span class="tab-sub">Ноги и Плечи</span></button>
-            <button class="tab-btn" data-day="day2">День 2<span class="tab-sub">Грудь и Бицепс</span></button>
-            <button class="tab-btn" data-day="day3">День 3<span class="tab-sub">Спина и Трицепс</span></button>
+            <button class="tab-btn active" data-day="day1">День 1<span class="tab-sub">Ноги та плечі</span></button>
+            <button class="tab-btn" data-day="day2">День 2<span class="tab-sub">Груди та біцепс</span></button>
+            <button class="tab-btn" data-day="day3">День 3<span class="tab-sub">Спина та трицепс</span></button>
         </nav>
 
         <!-- Progress Bar -->
         <div class="progress-section glass-panel">
             <div class="progress-label">
-                <span>Прогресс дня</span>
+                <span>Прогрес дня</span>
                 <span id="progress-text">0 / 8</span>
             </div>
             <div class="progress-bar">
@@ -85,7 +85,7 @@
         <div class="modal-overlay" id="modal-overlay">
             <div class="modal glass-panel" id="modal">
                 <div class="modal-header">
-                    <h2 id="modal-title">📊 История тренировок</h2>
+                    <h2 id="modal-title">📊 Історія тренувань</h2>
                     <button class="btn btn-icon modal-close" id="modal-close">
                         <span class="btn-emoji">✕</span>
                     </button>
@@ -100,13 +100,13 @@
         <div class="modal-overlay" id="readiness-overlay">
             <div class="modal glass-panel readiness-modal" id="readiness-modal">
                 <div class="modal-header">
-                    <h2>⚡ Проверка готовности</h2>
+                    <h2>⚡ Перевірка готовності</h2>
                 </div>
                 <div class="modal-body readiness-body">
-                    <p class="readiness-description">Оцените ваше состояние перед тренировкой</p>
+                    <p class="readiness-description">Оцініть свій стан перед тренуванням</p>
 
                     <div class="readiness-question">
-                        <label class="readiness-label">😴 Как вы спали? (1 — плохо, 5 — отлично)</label>
+                        <label class="readiness-label">😴 Як ви спали? (1 — погано, 5 — відмінно)</label>
                         <div class="readiness-buttons" id="sleep-buttons">
                             <button class="readiness-btn" data-value="1">1</button>
                             <button class="readiness-btn" data-value="2">2</button>
@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="readiness-question">
-                        <label class="readiness-label">😰 Уровень стресса (1 — низкий, 5 — высокий)</label>
+                        <label class="readiness-label">😰 Рівень стресу (1 — низький, 5 — високий)</label>
                         <div class="readiness-buttons" id="stress-buttons">
                             <button class="readiness-btn" data-value="1">1</button>
                             <button class="readiness-btn" data-value="2">2</button>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary readiness-submit" id="readiness-submit" disabled>Начать тренировку</button>
+                    <button class="btn btn-primary readiness-submit" id="readiness-submit" disabled>Почати тренування</button>
                 </div>
             </div>
         </div>

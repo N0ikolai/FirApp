@@ -1,51 +1,52 @@
 const WORKOUT_DATA = [
   {
-    id: "day1", title: "Ноги и Плечи", label: "День 1",
+    id: "day1", title: "Ноги та плечі", label: "День 1",
     exercises: [
-      { id: "squat", name: "Приседания со штангой", sets: "4 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_squats.jpg", emoji: "🏋️", alternatives: ["Фронтальные приседания", "Приседания в Смите"] },
-      { id: "legpress", name: "Жим ногами", sets: "4 × 10–15", targetReps: 15, src: "images/Legs-and-Shoulders/Leg_press_on_the_machine.jpg", emoji: "🦵", alternatives: ["Выпады с гантелями"] },
-      { id: "legext", name: "Разгибания ног сидя", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Seated_leg_extensions.jpg", emoji: "🦵", alternatives: ["Сисси-приседания"] },
-      { id: "legcurl", name: "Сгибания ног лёжа", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Lying_leg_curls.jpg", emoji: "🦵", alternatives: ["Мертвая тяга с гантелями"] },
-      { id: "ohpress", name: "Армейский жим стоя", sets: "4 × 8–12", targetReps: 12, src: "images/Legs-and-Shoulders/Standing_military_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей стоя"] },
-      { id: "dbpress", name: "Жим гантелей сидя", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Seated_dumbbell_press.jpg", emoji: "💪", alternatives: ["Жим Арнольда"] },
-      { id: "lateral", name: "Махи гантелями в стороны", sets: "4 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Dumbbell_Lateral_Raises.jpg", emoji: "💪", alternatives: ["Тяга нижнего блока в сторону"] },
-      { id: "uprightrow", name: "Тяга штанги к подбородку", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_chin-ups.jpg", emoji: "💪", alternatives: ["Махи перед собой"] }
+      { id: "squat", name: "Присідання зі штангою", sets: "4 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_squats.jpg", emoji: "🏋️", alternatives: ["Фронтальні присідання", "Присідання у Сміті"] },
+      { id: "ohpress", name: "Армійський жим стоячи", sets: "4 × 8–12", targetReps: 12, src: "images/Legs-and-Shoulders/Standing_military_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей стоячи"] },
+      { id: "legpress", name: "Жим ногами", sets: "4 × 10–15", targetReps: 15, src: "images/Legs-and-Shoulders/Leg_press_on_the_machine.jpg", emoji: "🦵", alternatives: ["Випади з гантелями"] },
+      { id: "dbpress", name: "Жим гантелей сидячи", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Seated_dumbbell_press.jpg", emoji: "💪", alternatives: ["Жим Арнольда"] },
+      { id: "legext", name: "Розгинання ніг сидячи", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Seated_leg_extensions.jpg", emoji: "🦵", alternatives: ["Сіссі-присідання"] },
+      { id: "lateral", name: "Махи гантелями в сторони", sets: "4 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Dumbbell_Lateral_Raises.jpg", emoji: "💪", alternatives: ["Тяга нижнього блоку в сторону"] },
+      { id: "legcurl", name: "Згинання ніг лежачи", sets: "3 × 12–15", targetReps: 15, src: "images/Legs-and-Shoulders/Lying_leg_curls.jpg", emoji: "🦵", alternatives: ["Мертва тяга з гантелями"] },
+      { id: "uprightrow", name: "Тяга штанги до підборіддя", sets: "3 × 10–12", targetReps: 12, src: "images/Legs-and-Shoulders/Barbell_chin-ups.jpg", emoji: "💪", alternatives: ["Махи перед собою"] }
     ]
   },
   {
-    id: "day2", title: "Грудь и Бицепс", label: "День 2",
+    id: "day2", title: "Груди та біцепс", label: "День 2",
     exercises: [
-      { id: "benchpress", name: "Жим штанги лёжа", sets: "4 × 8–12", targetReps: 12, src: "images/Chest-and-Biceps/Bench_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей лёжа", "Отжимания на брусьях"] },
-      { id: "inclinedb", name: "Жим гантелей на наклонной", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Incline_Dumbbell_Press.jpg", emoji: "💪", alternatives: ["Жим штанги на наклонной"] },
-      { id: "dbfly", name: "Разведение гантелей лёжа", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Lying_dumbbell_flyes.jpg", emoji: "💪", alternatives: ["Сведение рук в тренажере Бабочка"] },
-      { id: "crossover", name: "Сведение рук в кроссовере", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Crossover_arm_reduction.jpg", emoji: "🔗", alternatives: ["Пуловер с гантелью"] },
-      { id: "bbcurl", name: "Подъём штанги на бицепс", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Barbell_bicep-curl.jpg", emoji: "💪", alternatives: ["Подъем EZ-штанги"] },
-      { id: "dbcurl", name: "Подъём гантелей с супинацией", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell-Supination_Curls.jpg", emoji: "💪", alternatives: ["Попеременный подъем гантелей"] },
-      { id: "preacher", name: "Скамья Скотта (EZ-штанга)", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Scott_Bench_(EZ-bar).jpg", emoji: "💪", alternatives: ["Сгибания на нижнем блоке"] },
-      { id: "hammer", name: "«Молотки» с гантелями", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell_hammer_curls.jpg", emoji: "🔨", alternatives: ["Сгибания с канатом на блоке"] }
+      { id: "benchpress", name: "Жим штанги лежачи", sets: "4 × 8–12", targetReps: 12, src: "images/Chest-and-Biceps/Bench_press.jpg", emoji: "🏋️", alternatives: ["Жим гантелей лежачи", "Віджимання на брусах"] },
+      { id: "bbcurl", name: "Підйом штанги на біцепс", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Barbell_bicep-curl.jpg", emoji: "💪", alternatives: ["Підйом EZ-штанги"] },
+      { id: "inclinedb", name: "Жим гантелей на похилій лаві", sets: "4 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Incline_Dumbbell_Press.jpg", emoji: "💪", alternatives: ["Жим штанги на похилій лаві"] },
+      { id: "dbcurl", name: "Підйом гантелей із супінацією", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell-Supination_Curls.jpg", emoji: "💪", alternatives: ["Поперемінний підйом гантелей"] },
+      { id: "dbfly", name: "Розведення гантелей лежачи", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Lying_dumbbell_flyes.jpg", emoji: "💪", alternatives: ["Зведення рук у тренажері Метелик"] },
+      { id: "preacher", name: "Лава Скотта (EZ-штанга)", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Scott_Bench_(EZ-bar).jpg", emoji: "💪", alternatives: ["Згинання на нижньому блоці"] },
+      { id: "crossover", name: "Зведення рук у кросовері", sets: "3 × 12–15", targetReps: 15, src: "images/Chest-and-Biceps/Crossover_arm_reduction.jpg", emoji: "🔗", alternatives: ["Пуловер із гантеллю"] },
+      { id: "hammer", name: "«Молотки» з гантелями", sets: "3 × 10–12", targetReps: 12, src: "images/Chest-and-Biceps/Dumbbell_hammer_curls.jpg", emoji: "🔨", alternatives: ["Згинання з канатом на блоці"] }
     ]
   },
   {
-    id: "day3", title: "Спина и Трицепс", label: "День 3",
+    id: "day3", title: "Спина та трицепс", label: "День 3",
     exercises: [
-      { id: "pullup", name: "Подтягивания широким хватом", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Wide-grip_pull-ups.jpg", emoji: "🏃", alternatives: ["Тяга верхнего блока широким хватом"] },
-      { id: "bbrow", name: "Тяга штанги в наклоне", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Bent-over_barbell_row.jpg", emoji: "🏋️", alternatives: ["Тяга Т-грифа"] },
-      { id: "cablerow", name: "Тяга нижнего блока к поясу", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Low_block_pulldown_to_the_waist.jpg", emoji: "🔗", alternatives: ["Тяга гантелей лежа на животе"] },
-      { id: "dbrow", name: "Тяга гантели одной рукой", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/One-arm dumbbell_row.jpg", emoji: "💪", alternatives: ["Тяга в рычажном тренажере"] },
-      { id: "cgbench", name: "Жим узким хватом лёжа", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Close-grip_bench_press.jpg", emoji: "🏋️", alternatives: ["Отжимания от скамьи за спиной"] },
-      { id: "skullcrush", name: "Французский жим EZ-штангой", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/EZ-Bar_French_Press.jpg", emoji: "💀", alternatives: ["Французский жим с гантелями"] },
-      { id: "pushdown", name: "Разгибания на блоке с канатом", sets: "3 × 12–15", targetReps: 15, src: "images/Back-and-Triceps/Cable_Pushdowns.jpg", emoji: "🔗", alternatives: ["Разгибания с прямой рукоятью"] },
-      { id: "ohext", name: "Разгибание гантели из-за головы", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Overhead_Dumbbell_Extension.jpg", emoji: "💪", alternatives: ["Разгибание из-за головы в кроссовере"] }
+
+      { id: "pullup", name: "Підтягування широким хватом", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Wide-grip_pull-ups.jpg", emoji: "🏃", alternatives: ["Тяга верхнього блоку широким хватом"] },
+      { id: "cgbench", name: "Жим вузьким хватом лежачи", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Close-grip_bench_press.jpg", emoji: "🏋️", alternatives: ["Віджимання від лави за спиною"] },
+      { id: "bbrow", name: "Тяга штанги в нахилі", sets: "4 × 8–12", targetReps: 12, src: "images/Back-and-Triceps/Bent-over_barbell_row.jpg", emoji: "🏋️", alternatives: ["Тяга Т-грифа"] },
+      { id: "skullcrush", name: "Французький жим EZ-штангою", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/EZ-Bar_French_Press.jpg", emoji: "💀", alternatives: ["Французький жим з гантелями"] },
+      { id: "cablerow", name: "Тяга нижнього блоку до пояса", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Low_block_pulldown_to_the_waist.jpg", emoji: "🔗", alternatives: ["Тяга гантелей лежачи на животі"] },
+      { id: "pushdown", name: "Розгинання на блоці з канатом", sets: "3 × 12–15", targetReps: 15, src: "images/Back-and-Triceps/Cable_Pushdowns.jpg", emoji: "🔗", alternatives: ["Розгинання з прямою рукояттю"] },
+      { id: "dbrow", name: "Тяга гантелі однією рукою", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/One-arm dumbbell_row.jpg", emoji: "💪", alternatives: ["Тяга у важільному тренажері"] },
+      { id: "ohext", name: "Розгинання гантелі з-за голови", sets: "3 × 10–12", targetReps: 12, src: "images/Back-and-Triceps/Overhead_Dumbbell_Extension.jpg", emoji: "💪", alternatives: ["Розгинання з-за голови у кросовері"] }
     ]
   }
 ];
 
-// ===== STATE =====
+// STATE
 let activeDay = localStorage.getItem('activeDay') || 'day1';
 let todayDone = JSON.parse(localStorage.getItem('todayDone') || '{}');
 let sessionRpe = {}; // Temporary RPE values for current session
 
-// ===== DOM ELEMENTS =====
+//  DOM ELEMENTS
 const grid = document.getElementById('exercises-grid');
 const progressFill = document.getElementById('progress-fill');
 const progressText = document.getElementById('progress-text');
@@ -80,7 +81,7 @@ function toggleTheme() {
   themeIcon.textContent = next === 'dark' ? '☀️' : '🌙';
 }
 
-// ===== DELOAD SYSTEM =====
+//  DELOAD SYSTEM
 function getTrainingWeeks() {
   return parseInt(localStorage.getItem('training_weeks') || '0', 10);
 }
@@ -132,7 +133,7 @@ function updateDeloadBanner() {
   }
 }
 
-// ===== READINESS CHECK =====
+//READINESS CHECK
 function getTodayDateStr() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -177,9 +178,9 @@ function updateReadinessBadge() {
   readinessBadge.classList.toggle('poor', poor);
   readinessBadge.classList.toggle('good', !poor);
   if (poor) {
-    readinessTextEl.textContent = `Готовность: низкая (сон: ${r.sleep}/5, стресс: ${r.stress}/5) — веса -15%`;
+    readinessTextEl.textContent = `Самопочуття: погане (сон: ${r.sleep}/5, стресс: ${r.stress}/5) — ваги -15%`;
   } else {
-    readinessTextEl.textContent = `Готовность: хорошая (сон: ${r.sleep}/5, стресс: ${r.stress}/5)`;
+    readinessTextEl.textContent = `Самопочуття: добре (сон: ${r.sleep}/5, стресс: ${r.stress}/5)`;
   }
 }
 
@@ -228,7 +229,7 @@ function initReadinessModal() {
   });
 }
 
-// ===== ADAPTIVE WEIGHT ALGORITHM =====
+//ADAPTIVE WEIGHT ALGORITHM
 function getHistory(exId) {
   const raw = localStorage.getItem(`workout_log_${exId}`);
   return raw ? JSON.parse(raw) : [];
@@ -274,7 +275,7 @@ function suggestNextWeight(exId, targetReps) {
   return suggested;
 }
 
-// ===== PLATEAU DETECTION =====
+//PLATEAU DETECTION
 function detectPlateau(exId) {
   const history = getHistory(exId);
   if (history.length < 3) return null;
@@ -289,7 +290,7 @@ function getRandomAlternative(alternatives) {
   return alternatives[Math.floor(Math.random() * alternatives.length)];
 }
 
-// ===== TONNAGE CALCULATION =====
+//TONNAGE CALCULATION
 function getWeekStart(date) {
   const d = new Date(date);
   const day = d.getDay();
@@ -362,10 +363,10 @@ function showTonnageModal() {
   });
 
   if (maxTonnage === 0) {
-    html = '<div class="history-empty">📭 Нет данных о тоннаже. Выполните тренировки!</div>';
+    html = '<div class="history-empty">📭 Поки тут пусто, записуйте данні щоб появились перші записи!</div>';
   } else {
     const currentWeek = getWeekStart(new Date().toISOString());
-    html += `<p class="tonnage-week-label">Текущая неделя: ${currentWeek}</p>`;
+    html += `<p class="tonnage-week-label">Поточний тиждень: ${currentWeek}</p>`;
 
     Object.entries(tonnage).forEach(([muscle, data]) => {
       const lastValue = data.values.length > 0 ? data.values[data.values.length - 1] : 0;
@@ -374,21 +375,21 @@ function showTonnageModal() {
 
       html += `<div class="tonnage-section">
         <div class="tonnage-muscle-title">${data.label}</div>
-        <div class="tonnage-value">Последняя неделя: ${Math.round(lastValue).toLocaleString('ru-RU')} кг</div>
+        <div class="tonnage-value">Останній тиждень: ${Math.round(lastValue).toLocaleString('ru-RU')} кг</div>
         <div class="tonnage-bar-wrapper">
           <div class="tonnage-bar-fill" style="width: ${barWidth}%"></div>
         </div>
-        ${stagnation ? '<div class="tonnage-stagnation">⚠️ Тоннаж стагнирует 4+ недели. Попробуйте увеличить количество подходов или сменить упражнения.</div>' : ''}
+        ${stagnation ? '<div class="tonnage-stagnation">⚠️ Ваги стагнують вже 4+ тижні. Але, збільш ваги або зміни вправи.</div>' : ''}
       </div>`;
     });
   }
 
-  modalTitle.textContent = '📈 Недельный тоннаж';
+  modalTitle.textContent = '📈 Тижневий тонаж';
   modalBody.innerHTML = html;
   modalOverlay.classList.add('active');
 }
 
-// ===== RENDER EXERCISES =====
+//RENDER EXERCISES
 function renderExercises() {
   const dayData = WORKOUT_DATA.find(d => d.id === activeDay);
   if (!dayData) return;
@@ -415,13 +416,13 @@ function renderExercises() {
     let suggestionHtml = '';
     if (suggested > 0) {
       let label = `🤖 Рекомендация: ${suggested} кг`;
-      if (isDeloadWeek()) label += ' (разгрузка)';
-      if (isReadinessPoor(getTodayReadiness())) label += ' (↓готовность)';
+      if (isDeloadWeek()) label += ' (розвантаження)';
+      if (isReadinessPoor(getTodayReadiness())) label += ' (↓готовність)';
       suggestionHtml = `<div class="suggestion-badge">${label}</div>`;
     }
 
     // RPE buttons HTML
-    let rpeHtml = '<div class="rpe-section"><div class="rpe-label">RPE (нагрузка)</div><div class="rpe-buttons">';
+    let rpeHtml = '<div class="rpe-section"><div class="rpe-label">RPE (навантаження)</div><div class="rpe-buttons">';
     for (let i = 1; i <= 10; i++) {
       const activeClass = currentRpe === i ? ' active' : '';
       const levelClass = i >= 10 ? ' rpe-max' : (i >= 8 ? ' rpe-high' : '');
@@ -449,7 +450,7 @@ function renderExercises() {
       ${rpeHtml}
       <div class="checkbox-wrapper">
         <input type="checkbox" class="custom-checkbox cb-done" id="cb-${ex.id}" ${isDone ? 'checked' : ''}>
-        <label class="checkbox-label" for="cb-${ex.id}">Выполнено</label>
+        <label class="checkbox-label" for="cb-${ex.id}">Виконанно</label>
       </div>
       ${suggestionHtml}
       ${plateauHtml}
@@ -485,7 +486,7 @@ function renderExercises() {
   updateProgress();
 }
 
-// ===== HANDLE DONE =====
+//HANDLE DONE
 function handleDone(ex, card, checkbox) {
   const weightInput = card.querySelector('.input-weight');
   const repsInput = card.querySelector('.input-reps');
@@ -510,7 +511,7 @@ function handleDone(ex, card, checkbox) {
   updateProgress();
 }
 
-// ===== PROGRESS =====
+//PROGRESS
 function updateProgress() {
   const dayData = WORKOUT_DATA.find(d => d.id === activeDay);
   if (!dayData) return;
@@ -521,7 +522,7 @@ function updateProgress() {
   progressText.textContent = `${done} / ${total}`;
 }
 
-// ===== DAY TABS =====
+//DAY TABS
 function initTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
   tabs.forEach(tab => {
@@ -541,9 +542,9 @@ function initTabs() {
   });
 }
 
-// ===== CSV EXPORT =====
+//CSV EXPORT
 function exportCSV() {
-  let csv = 'Дата,Упражнение,Вес (кг),Повторения,RPE\n';
+  let csv = 'Дата,Вправи,Вага (кг),Повтори,RPE\n';
   let hasData = false;
 
   WORKOUT_DATA.forEach(day => {
@@ -559,7 +560,7 @@ function exportCSV() {
   });
 
   if (!hasData) {
-    alert('Нет данных для экспорта. Выполните хотя бы одно упражнение.');
+    alert('Нема данних. Викононайте хочаб одну вправу.');
     return;
   }
 
@@ -574,12 +575,12 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-// ===== RESET DAY =====
+//RESET DA
 function resetDay() {
   const dayData = WORKOUT_DATA.find(d => d.id === activeDay);
   if (!dayData) return;
 
-  if (!confirm('Сбросить все отметки "Выполнено" для текущего дня?')) return;
+  if (!confirm('Скинути всі відмитки Виконано за день?')) return;
 
   dayData.exercises.forEach(ex => {
     delete todayDone[ex.id];
@@ -616,10 +617,10 @@ function showHistory() {
   });
 
   if (!hasData) {
-    html = '<div class="history-empty">📭 История пуста. Начните тренировку!</div>';
+    html = '<div class="history-empty">📭 Немає данниз. Почніть тренування!</div>';
   }
 
-  modalTitle.textContent = '📊 История тренировок';
+  modalTitle.textContent = '📊 Історія тренувань';
   modalBody.innerHTML = html;
   modalOverlay.classList.add('active');
 }
@@ -647,7 +648,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ===== INIT =====
+//INIT
 initTheme();
 checkAndUpdateWeek();
 updateDeloadBanner();
