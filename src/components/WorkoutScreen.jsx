@@ -44,7 +44,7 @@ export default function WorkoutScreen({ data, onFinish }) {
   const IconComp = currentExercise ? ICON_MAP[currentExercise.icon] || Dumbbell : Dumbbell;
 
   const handleDone = () => {
-    triggerVibration(100); // Щільний клік при виконанні
+    triggerVibration(100);
 
     const updated = [...exercises];
     updated[currentIndex] = {
@@ -210,7 +210,7 @@ export default function WorkoutScreen({ data, onFinish }) {
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => {
-                triggerVibration(40); // Легкий тік
+                triggerVibration(40);
                 setCurrentIndex(Math.max(0, currentIndex - 1));
               }}
               disabled={currentIndex === 0}
@@ -237,7 +237,7 @@ export default function WorkoutScreen({ data, onFinish }) {
 
             <button
               onClick={() => {
-                triggerVibration(40); // Легкий тік
+                triggerVibration(40);
                 setCurrentIndex(Math.min(exercises.length - 1, currentIndex + 1));
               }}
               disabled={currentIndex === exercises.length - 1}

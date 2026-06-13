@@ -65,8 +65,8 @@ export default function Dashboard({ onNewWorkout }) {
       {/* Header */}
       <div className="pt-8 pb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Strength Tracker</h1>
-          <p className="text-white/50 text-sm">Ваш щоденник тренувань</p>
+          <h1 className="text-2xl font-bold text-white">FitApp</h1>
+          <p className="text-white/50 text-sm">Щоденник тренувань</p>
         </div>
         <button
           onClick={() => setShowSettings(true)}
