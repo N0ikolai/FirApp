@@ -49,3 +49,7 @@ export function getStats() {
   const totalTonnage = history.reduce((sum, entry) => sum + (entry.tonnage || 0), 0);
   return { totalWorkouts, totalTonnage };
 }
+
+export function clearAllData() {
+  localStorage.clear();
+}

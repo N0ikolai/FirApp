@@ -1,85 +1,131 @@
-import React from 'react';
-import { Activity, TrendingUp, Calendar, Plus } from 'lucide-react';
-import { getStats, loadHistory } from '../utils/storage';
+import React, { useState } from 'react';
+import { Settings, Activity, Trash2, History, Plus, X } from 'lucide-react';
+import { getStats, clearAllData, loadHistory } from '../utils/storage';
 
 export default function Dashboard({ onNewWorkout }) {
-  const { totalWorkouts, totalTonnage } = getStats();
+  const stats = getStats();
   const history = loadHistory();
+  const [showSettings, setShowSettings] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
-  const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleDateString('uk-UA', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+  const handleClearData = () => {
+    if (window.confirm('Ви впевнені, що хочете видалити всі дані? Цю дію неможливо скасувати.')) {
+      clearAllData();
+      window.location.reload();
+    }
   };
 
+  // Форматирование тоннажа
+  const displayTonnage = stats.totalTonnage >= 1000
+    ? (stats.totalTonnage / 1000).toFixed(1) + 'т'
+    : stats.totalTonnage + ' кг';
+
   return (
-    <div className="p-5 pb-24 max-w-lg mx-auto">
+    <div className="p-5 max-w-lg mx-auto min-h-dvh flex flex-col relative z-10">
       {/* Header */}
-      <div className="pt-8 pb-6">
-        <h1 className="text-2xl font-bold text-white">Strength Tracker</h1>
-        <p className="text-white/50 text-sm mt-1">Ваш щоденник тренувань</p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="glass-card p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-4 h-4 text-blue-400" />
-            <span className="text-xs text-white/50">Тренувань</span>
-          </div>
-          <p className="text-2xl font-bold text-white">{totalWorkouts}</p>
+      <div className="pt-8 pb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Strength Tracker</h1>
+          <p className="text-white/50 text-sm">Ваш щоденник тренувань</p>
         </div>
-        <div className="glass-card p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-purple-400" />
-            <span className="text-xs text-white/50">Тоннаж (кг)</span>
-          </div>
-          <p className="text-2xl font-bold text-white">
-            {totalTonnage > 1000 ? `${(totalTonnage / 1000).toFixed(1)}т` : totalTonnage}
-          </p>
-        </div>
-      </div>
-
-      {/* History */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <Calendar className="w-4 h-4 text-white/50" />
-          <h2 className="text-sm font-medium text-white/70">Історія тренувань</h2>
-        </div>
-
-        {history.length === 0 ? (
-          <div className="glass-card p-6 text-center">
-            <p className="text-white/40 text-sm">Поки що немає тренувань</p>
-            <p className="text-white/30 text-xs mt-1">Почніть перше тренування!</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {history.slice(0, 10).map((entry) => (
-              <div key={entry.id} className="glass-card p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-white font-medium text-sm">{entry.group}</p>
-                  <p className="text-white/40 text-xs">{formatDate(entry.date)}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-white/70 text-sm">{entry.tonnage} кг</p>
-                  <p className="text-white/40 text-xs">{entry.exerciseCount} вправ</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* New Workout Button */}
-      <div className="fixed bottom-6 left-5 right-5 max-w-lg mx-auto">
-        <button onClick={onNewWorkout} className="glass-button-primary flex items-center justify-center gap-2">
-          <Plus className="w-5 h-5" />
-          Нове тренування
+        <button
+          onClick={() => setShowSettings(true)}
+          className="p-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors"
+        >
+          <Settings className="w-6 h-6 text-white/70" />
         </button>
       </div>
+
+      {/* Stats - GLASSMORPHISM */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
+          <div className="text-white/50 text-xs mb-1 flex items-center gap-1">
+            <Activity className="w-3 h-3" /> Тренувань
+          </div>
+          <div className="text-2xl font-bold text-white">{stats.totalWorkouts}</div>
+        </div>
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
+          <div className="text-white/50 text-xs mb-1 flex items-center gap-1">
+            <Activity className="w-3 h-3" /> Тоннаж
+          </div>
+          <div className="text-2xl font-bold text-white">{displayTonnage}</div>
+        </div>
+      </div>
+
+      {/* History Toggle Button */}
+      <button
+        onClick={() => setShowHistory(!showHistory)}
+        className={`w-full flex items-center justify-between p-4 mb-4 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl transition-colors ${showHistory ? 'bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
+      >
+        <div className="flex items-center gap-3">
+          <History className="w-5 h-5 text-blue-400" />
+          <span className="text-white font-medium">Історія тренувань</span>
+        </div>
+        <span className="text-white/50 text-sm">
+          {showHistory ? 'Сховати' : `${history.length} записів`}
+        </span>
+      </button>
+
+      {/* History List - GLASSMORPHISM */}
+      {showHistory && (
+        <div className="flex-1 overflow-y-auto mb-6 space-y-3 pb-24">
+          {history.length === 0 ? (
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 text-center shadow-xl">
+              <p className="text-white/40 text-sm">Історія порожня</p>
+            </div>
+          ) : (
+            history.map((session) => (
+              <div key={session.id} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-xl hover:bg-white/10 transition-colors">
+                <div>
+                  <div className="text-white font-medium text-sm">{session.group}</div>
+                  <div className="text-white/40 text-xs mt-1">
+                    {new Date(session.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-white font-bold text-sm">{session.tonnage} кг</div>
+                  <div className="text-white/40 text-xs mt-1">{session.exerciseCount} вправ</div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Spacer to push start button to bottom if history is closed */}
+      {!showHistory && <div className="flex-1" />}
+
+      {/* Start Button - GLASSMORPHISM */}
+      <div className={`${showHistory ? 'fixed bottom-5 left-5 right-5 max-w-lg mx-auto z-20' : ''}`}>
+        <button
+          onClick={onNewWorkout}
+          className="w-full py-4 bg-blue-600/80 hover:bg-blue-600 backdrop-blur-md border border-blue-500/50 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all flex items-center justify-center gap-2"
+        >
+          <Plus className="w-5 h-5" /> Нове тренування
+        </button>
+      </div>
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/60 backdrop-blur-sm">
+          <div className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-white">Налаштування</h2>
+              <button onClick={() => setShowSettings(false)} className="p-2 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
+                <X className="w-5 h-5 text-white/70" />
+              </button>
+            </div>
+
+            <button
+              onClick={handleClearData}
+              className="w-full flex items-center justify-center gap-2 p-4 bg-red-500/10 border border-red-500/20 text-red-500 font-medium rounded-xl hover:bg-red-500/20 transition-colors"
+            >
+              <Trash2 className="w-5 h-5" />
+              Скинути всі дані
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
