@@ -183,34 +183,4 @@ export default function WorkoutScreen({ data, onFinish }) {
               />
             </div>
             <div>
-              <label className="text-xs text-white/50 mb-2 block text-center uppercase tracking-widest">Повторення</label>
-              <input
-                type="number"
-                inputMode="numeric"
-                value={reps}
-                onChange={(e) => setReps(e.target.value)}
-                placeholder="0"
-                className="w-full bg-black/20 border border-white/10 rounded-2xl py-4 text-center text-3xl font-bold text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all shadow-inner"
-              />
-            </div>
-          </div>
-
-          {/* Navigation & Done buttons */}
-          <div className="flex items-center gap-3 mb-2">
-            <button
-              onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
-              disabled={currentIndex === 0}
-              className={`p-4 rounded-2xl border flex items-center justify-center transition-all ${
-                currentIndex === 0
-                  ? 'bg-white/5 border-white/5 opacity-30 cursor-not-allowed'
-                  : 'bg-white/10 border-white/20 hover:bg-white/20 active:scale-95 shadow-lg'
-              }`}
-            >
-              <ChevronLeft className="w-6 h-6 text-white" />
-            </button>
-
-            <button
-              onClick={handleDone}
-              className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl ${
-                currentExercise.done
-                  ? 'bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-md border border-emerald-500/50
+              <label className="text-xs text-white
