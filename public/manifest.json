@@ -1,6 +1,6 @@
 {
-  "name": "FitApp",
-  "short_name": "FitApp",
+  "name": "Strength Tracker",
+  "short_name": "Strength",
   "description": "PWA для запису силових тренувань",
   "start_url": "/FirApp/",
   "scope": "/FirApp/",
