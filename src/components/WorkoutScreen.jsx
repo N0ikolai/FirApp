@@ -183,4 +183,81 @@ export default function WorkoutScreen({ data, onFinish }) {
               />
             </div>
             <div>
-              <label className="text-xs text-white
+              <label className="text-xs text-white/50 mb-2 block text-center uppercase tracking-widest">Повторення</label>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={reps}
+                onChange={(e) => setReps(e.target.value)}
+                placeholder="0"
+                className="w-full bg-black/20 border border-white/10 rounded-2xl py-4 text-center text-3xl font-bold text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all shadow-inner"
+              />
+            </div>
+          </div>
+
+          {/* Navigation & Done buttons */}
+          <div className="flex items-center gap-3 mb-2">
+            <button
+              onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+              disabled={currentIndex === 0}
+              className={`p-4 rounded-2xl border flex items-center justify-center transition-all ${
+                currentIndex === 0
+                  ? 'bg-white/5 border-white/5 opacity-30 cursor-not-allowed'
+                  : 'bg-white/10 border-white/20 hover:bg-white/20 active:scale-95 shadow-lg'
+              }`}
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+
+            <button
+              onClick={handleDone}
+              className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl ${
+                currentExercise.done
+                  ? 'bg-emerald-600/80 hover:bg-emerald-600 text-white backdrop-blur-md border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)]'
+                  : 'bg-blue-600/80 hover:bg-blue-600 text-white backdrop-blur-md border border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.3)]'
+              }`}
+            >
+              <Check className="w-6 h-6" />
+              {currentExercise.done ? 'Оновити' : 'Виконано'}
+            </button>
+
+            <button
+              onClick={() => setCurrentIndex(Math.min(exercises.length - 1, currentIndex + 1))}
+              disabled={currentIndex === exercises.length - 1}
+              className={`p-4 rounded-2xl border flex items-center justify-center transition-all ${
+                currentIndex === exercises.length - 1
+                  ? 'bg-white/5 border-white/5 opacity-30 cursor-not-allowed'
+                  : 'bg-white/10 border-white/20 hover:bg-white/20 active:scale-95 shadow-lg'
+              }`}
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Add exercise button */}
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-full py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white/70 font-medium rounded-2xl transition-all flex items-center justify-center gap-2"
+        >
+          <Plus className="w-5 h-5" />
+          Додати вправу
+        </button>
+      </div>
+
+      {/* Modals */}
+      {showExitModal && (
+        <ExitModal
+          onConfirm={handleConfirmExit}
+          onCancel={() => setShowExitModal(false)}
+        />
+      )}
+      {showAddModal && (
+        <AddExerciseModal
+          onAdd={handleAddExercise}
+          onClose={() => setShowAddModal(false)}
+        />
+      )}
+    </div>
+  );
+}
