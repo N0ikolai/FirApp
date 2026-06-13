@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.idea/
+*.iml
+out/
+workspace.xml
+usage.statistics.xml
+.idea/*

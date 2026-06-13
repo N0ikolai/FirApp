@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #09090b;
+  color: #fafafa;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-lg border border-white/10 rounded-2xl;
+  }
+
+  .glass-input {
+    @apply w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-5 py-4 text-xl text-white placeholder-white/40 outline-none focus:border-white/30 focus:bg-white/10 transition-all;
+  }
+
+  .glass-button {
+    @apply w-full py-4 rounded-xl font-semibold text-lg transition-all active:scale-95;
+  }
+
+  .glass-button-primary {
+    @apply glass-button bg-blue-500/80 backdrop-blur-sm border border-blue-400/30 text-white hover:bg-blue-500/90;
+  }
+
+  .glass-button-secondary {
+    @apply glass-button bg-white/10 backdrop-blur-sm border border-white/10 text-white hover:bg-white/15;
+  }
+
+  .glass-button-danger {
+    @apply glass-button bg-red-500/80 backdrop-blur-sm border border-red-400/30 text-white hover:bg-red-500/90;
+  }
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
