@@ -9,6 +9,13 @@ const ICON_MAP = {
   Cable: Cable,
 };
 
+// Функція для тактильного відгуку
+const triggerVibration = (pattern) => {
+  if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+    navigator.vibrate(pattern);
+  }
+};
+
 export default function WorkoutScreen({ data, onFinish }) {
   const [exercises, setExercises] = useState(data.exercises);
   const [currentIndex, setCurrentIndex] = useState(
@@ -37,6 +44,8 @@ export default function WorkoutScreen({ data, onFinish }) {
   const IconComp = currentExercise ? ICON_MAP[currentExercise.icon] || Dumbbell : Dumbbell;
 
   const handleDone = () => {
+    triggerVibration(100); // Щільний клік при виконанні
+
     const updated = [...exercises];
     updated[currentIndex] = {
       ...updated[currentIndex],
@@ -55,12 +64,14 @@ export default function WorkoutScreen({ data, onFinish }) {
     } else {
       const hasIncomplete = updated.some((e) => !e.done);
       if (!hasIncomplete) {
+        triggerVibration([200, 100, 200]); // Подвійна вібрація на фініш
         onFinish({ ...data, exercises: updated });
       }
     }
   };
 
   const handleExit = () => {
+    triggerVibration(40);
     const hasIncomplete = exercises.some((e) => !e.done);
     if (hasIncomplete) {
       setShowExitModal(true);
@@ -198,7 +209,10 @@ export default function WorkoutScreen({ data, onFinish }) {
           {/* Navigation & Done buttons */}
           <div className="flex items-center gap-3 mb-2">
             <button
-              onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
+              onClick={() => {
+                triggerVibration(40); // Легкий тік
+                setCurrentIndex(Math.max(0, currentIndex - 1));
+              }}
               disabled={currentIndex === 0}
               className={`p-4 rounded-2xl border flex items-center justify-center transition-all ${
                 currentIndex === 0
@@ -222,7 +236,10 @@ export default function WorkoutScreen({ data, onFinish }) {
             </button>
 
             <button
-              onClick={() => setCurrentIndex(Math.min(exercises.length - 1, currentIndex + 1))}
+              onClick={() => {
+                triggerVibration(40); // Легкий тік
+                setCurrentIndex(Math.min(exercises.length - 1, currentIndex + 1));
+              }}
               disabled={currentIndex === exercises.length - 1}
               className={`p-4 rounded-2xl border flex items-center justify-center transition-all ${
                 currentIndex === exercises.length - 1
@@ -237,7 +254,10 @@ export default function WorkoutScreen({ data, onFinish }) {
 
         {/* Add exercise button */}
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => {
+            triggerVibration(40);
+            setShowAddModal(true);
+          }}
           className="w-full py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white/70 font-medium rounded-2xl transition-all flex items-center justify-center gap-2"
         >
           <Plus className="w-5 h-5" />
