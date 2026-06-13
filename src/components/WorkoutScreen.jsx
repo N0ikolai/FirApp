@@ -9,13 +9,13 @@ const ICON_MAP = {
   Cable: Cable,
 };
 
-// Функція для тактильного відгуку
 const triggerVibration = (pattern) => {
   if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-    navigator.vibrate(pattern);
+    if (getVibrationSetting()) {
+      navigator.vibrate(pattern);
+    }
   }
 };
-
 export default function WorkoutScreen({ data, onFinish }) {
   const [exercises, setExercises] = useState(data.exercises);
   const [currentIndex, setCurrentIndex] = useState(

@@ -63,3 +63,12 @@ export function deleteFromHistory(id) {
     console.warn('Failed to delete from history', e);
   }
 }
+
+export function getVibrationSetting() {
+  const val = localStorage.getItem('vibration_enabled');
+  return val !== 'false'; // Увімкнено за замовчуванням
+}
+
+export function setVibrationSetting(isEnabled) {
+  localStorage.setItem('vibration_enabled', isEnabled);
+}

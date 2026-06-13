@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X, TrendingUp } from 'lucide-react';
-import { clearAllData, loadHistory, deleteFromHistory } from '../utils/storage';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone } from 'lucide-react';
+import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting } from '../utils/storage';
 
 export default function Dashboard({ onNewWorkout }) {
   const [history, setHistory] = useState(loadHistory());
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [vibrationEnabled, setVibrationEnabled] = useState(getVibrationSetting());
 
   const stats = {
     totalWorkouts: history.length,
@@ -25,6 +26,12 @@ export default function Dashboard({ onNewWorkout }) {
       deleteFromHistory(id);
       setHistory(loadHistory());
     }
+  };
+
+  const handleToggleVibration = () => {
+    const newVal = !vibrationEnabled;
+    setVibrationEnabled(newVal);
+    setVibrationSetting(newVal);
   };
 
   const formatDate = (dateString) => {
@@ -50,7 +57,6 @@ export default function Dashboard({ onNewWorkout }) {
     ? (stats.totalTonnage / 1000).toFixed(1) + 'т'
     : stats.totalTonnage + ' кг';
 
-  // Підготовка даних для графіка (останні 7 тренувань, сортування від старіших до новіших)
   const chartData = [...history].slice(0, 7).reverse();
   const maxTonnage = chartData.length > 0 ? Math.max(...chartData.map(s => s.tonnage)) : 1;
 
@@ -94,18 +100,14 @@ export default function Dashboard({ onNewWorkout }) {
           </div>
           <div className="h-24 flex items-end justify-between gap-2">
             {chartData.map((session) => {
-              // Вираховуємо висоту стовпця у відсотках (мінімум 5% щоб було видно)
               const heightPercent = Math.max((session.tonnage / maxTonnage) * 100, 5);
-              // Беремо тільки колір без тіні для графіка
               const bgColorClass = getGroupColor(session.group).split(' ')[0];
 
               return (
                 <div key={session.id} className="w-full flex flex-col items-center gap-2 group relative">
-                  {/* Tooltip з цифрою */}
                   <div className="absolute -top-8 bg-zinc-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
                     {session.tonnage} кг
                   </div>
-                  {/* Стовпець графіка */}
                   <div
                     className={`w-full rounded-t-md opacity-70 hover:opacity-100 transition-all cursor-pointer ${bgColorClass}`}
                     style={{ height: `${heightPercent}%` }}
@@ -189,6 +191,21 @@ export default function Dashboard({ onNewWorkout }) {
               </button>
             </div>
 
+            {/* Toggle Vibration */}
+            <button
+              onClick={handleToggleVibration}
+              className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors mb-3"
+            >
+              <div className="flex items-center gap-3">
+                <Smartphone className="w-5 h-5 text-blue-400" />
+                Тактильний відгук
+              </div>
+              <div className={`w-12 h-6 rounded-full transition-colors relative ${vibrationEnabled ? 'bg-blue-500' : 'bg-white/10'}`}>
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${vibrationEnabled ? 'left-7' : 'left-1'}`} />
+              </div>
+            </button>
+
+            {/* Clear Data */}
             <button
               onClick={handleClearData}
               className="w-full flex items-center justify-center gap-2 p-4 bg-red-500/10 border border-red-500/20 text-red-500 font-medium rounded-xl hover:bg-red-500/20 transition-colors"
