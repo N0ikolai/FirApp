@@ -3,7 +3,6 @@ import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight } from 'luci
 import { saveSession } from '../utils/storage';
 import ExitModal from './ExitModal';
 import AddExerciseModal from './AddExerciseModal';
-import { saveSession, getVibrationSetting } from '../utils/storage';
 
 const ICON_MAP = {
   Dumbbell: Dumbbell,
