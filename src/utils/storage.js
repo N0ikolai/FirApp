@@ -53,3 +53,13 @@ export function getStats() {
 export function clearAllData() {
   localStorage.clear();
 }
+
+export function deleteFromHistory(id) {
+  try {
+    const history = loadHistory();
+    const updated = history.filter(entry => entry.id !== id);
+    localStorage.setItem(KEYS.HISTORY, JSON.stringify(updated));
+  } catch (e) {
+    console.warn('Failed to delete from history', e);
+  }
+}

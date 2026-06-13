@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Settings, Activity, Trash2, History, Plus, X } from 'lucide-react';
-import { getStats, clearAllData, loadHistory } from '../utils/storage';
+import { clearAllData, loadHistory, deleteFromHistory } from '../utils/storage';
 
 export default function Dashboard({ onNewWorkout }) {
-  const stats = getStats();
-  const history = loadHistory();
+  // Тепер історія лежить у стейті, щоб екран оновлювався одразу після видалення
+  const [history, setHistory] = useState(loadHistory());
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+
+  // Статистика рахується динамічно з поточного стейту
+  const stats = {
+    totalWorkouts: history.length,
+    totalTonnage: history.reduce((sum, entry) => sum + (entry.tonnage || 0), 0)
+  };
 
   const handleClearData = () => {
     if (window.confirm('Ви впевнені, що хочете видалити всі дані? Цю дію неможливо скасувати.')) {
@@ -15,7 +21,26 @@ export default function Dashboard({ onNewWorkout }) {
     }
   };
 
-  // Форматирование тоннажа
+  const handleDeleteRecord = (id, e) => {
+    e.stopPropagation();
+    if (window.confirm('Видалити це тренування з історії?')) {
+      deleteFromHistory(id);
+      setHistory(loadHistory()); // Оновлюємо список на екрані
+    }
+  };
+
+  // Красиве форматування дат (Сьогодні / Вчора)
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) return 'Сьогодні';
+    if (date.toDateString() === yesterday.toDateString()) return 'Вчора';
+    return date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
+  };
+
   const displayTonnage = stats.totalTonnage >= 1000
     ? (stats.totalTonnage / 1000).toFixed(1) + 'т'
     : stats.totalTonnage + ' кг';
@@ -66,7 +91,7 @@ export default function Dashboard({ onNewWorkout }) {
         </span>
       </button>
 
-      {/* History List - GLASSMORPHISM */}
+      {/* History List */}
       {showHistory && (
         <div className="flex-1 overflow-y-auto mb-6 space-y-3 pb-24">
           {history.length === 0 ? (
@@ -79,12 +104,20 @@ export default function Dashboard({ onNewWorkout }) {
                 <div>
                   <div className="text-white font-medium text-sm">{session.group}</div>
                   <div className="text-white/40 text-xs mt-1">
-                    {new Date(session.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {formatDate(session.date)}
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-white font-bold text-sm">{session.tonnage} кг</div>
-                  <div className="text-white/40 text-xs mt-1">{session.exerciseCount} вправ</div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <div className="text-white font-bold text-sm">{session.tonnage} кг</div>
+                    <div className="text-white/40 text-xs mt-1">{session.exerciseCount} вправ</div>
+                  </div>
+                  <button
+                    onClick={(e) => handleDeleteRecord(session.id, e)}
+                    className="p-2 text-white/20 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             ))
@@ -95,7 +128,7 @@ export default function Dashboard({ onNewWorkout }) {
       {/* Spacer to push start button to bottom if history is closed */}
       {!showHistory && <div className="flex-1" />}
 
-      {/* Start Button - GLASSMORPHISM */}
+      {/* Start Button */}
       <div className={`${showHistory ? 'fixed bottom-5 left-5 right-5 max-w-lg mx-auto z-20' : ''}`}>
         <button
           onClick={onNewWorkout}
