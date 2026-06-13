@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X } from 'lucide-react';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp } from 'lucide-react';
 import { clearAllData, loadHistory, deleteFromHistory } from '../utils/storage';
 
 export default function Dashboard({ onNewWorkout }) {
-  // Тепер історія лежить у стейті, щоб екран оновлювався одразу після видалення
   const [history, setHistory] = useState(loadHistory());
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  // Статистика рахується динамічно з поточного стейту
   const stats = {
     totalWorkouts: history.length,
     totalTonnage: history.reduce((sum, entry) => sum + (entry.tonnage || 0), 0)
@@ -25,11 +23,10 @@ export default function Dashboard({ onNewWorkout }) {
     e.stopPropagation();
     if (window.confirm('Видалити це тренування з історії?')) {
       deleteFromHistory(id);
-      setHistory(loadHistory()); // Оновлюємо список на екрані
+      setHistory(loadHistory());
     }
   };
 
-  // Красиве форматування дат (Сьогодні / Вчора)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -41,9 +38,21 @@ export default function Dashboard({ onNewWorkout }) {
     return date.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short' });
   };
 
+  const getGroupColor = (groupName) => {
+    if (!groupName) return 'bg-gray-500';
+    if (groupName.toLowerCase().includes('ноги')) return 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]';
+    if (groupName.toLowerCase().includes('груди')) return 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]';
+    if (groupName.toLowerCase().includes('спина')) return 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]';
+    return 'bg-purple-500';
+  };
+
   const displayTonnage = stats.totalTonnage >= 1000
     ? (stats.totalTonnage / 1000).toFixed(1) + 'т'
     : stats.totalTonnage + ' кг';
+
+  // Підготовка даних для графіка (останні 7 тренувань, сортування від старіших до новіших)
+  const chartData = [...history].slice(0, 7).reverse();
+  const maxTonnage = chartData.length > 0 ? Math.max(...chartData.map(s => s.tonnage)) : 1;
 
   return (
     <div className="p-5 max-w-lg mx-auto min-h-dvh flex flex-col relative z-10">
@@ -61,8 +70,8 @@ export default function Dashboard({ onNewWorkout }) {
         </button>
       </div>
 
-      {/* Stats - GLASSMORPHISM */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
           <div className="text-white/50 text-xs mb-1 flex items-center gap-1">
             <Activity className="w-3 h-3" /> Тренувань
@@ -76,6 +85,37 @@ export default function Dashboard({ onNewWorkout }) {
           <div className="text-2xl font-bold text-white">{displayTonnage}</div>
         </div>
       </div>
+
+      {/* Mini Chart */}
+      {chartData.length > 0 && (
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-6 shadow-xl">
+          <div className="text-white/50 text-xs mb-4 flex items-center gap-1">
+            <TrendingUp className="w-3 h-3" /> Динаміка (останні 7 тренувань)
+          </div>
+          <div className="h-24 flex items-end justify-between gap-2">
+            {chartData.map((session) => {
+              // Вираховуємо висоту стовпця у відсотках (мінімум 5% щоб було видно)
+              const heightPercent = Math.max((session.tonnage / maxTonnage) * 100, 5);
+              // Беремо тільки колір без тіні для графіка
+              const bgColorClass = getGroupColor(session.group).split(' ')[0];
+
+              return (
+                <div key={session.id} className="w-full flex flex-col items-center gap-2 group relative">
+                  {/* Tooltip з цифрою */}
+                  <div className="absolute -top-8 bg-zinc-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
+                    {session.tonnage} кг
+                  </div>
+                  {/* Стовпець графіка */}
+                  <div
+                    className={`w-full rounded-t-md opacity-70 hover:opacity-100 transition-all cursor-pointer ${bgColorClass}`}
+                    style={{ height: `${heightPercent}%` }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* History Toggle Button */}
       <button
@@ -100,8 +140,9 @@ export default function Dashboard({ onNewWorkout }) {
             </div>
           ) : (
             history.map((session) => (
-              <div key={session.id} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-xl hover:bg-white/10 transition-colors">
-                <div>
+              <div key={session.id} className="relative bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-xl hover:bg-white/10 transition-colors overflow-hidden">
+                <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${getGroupColor(session.group)}`} />
+                <div className="pl-2">
                   <div className="text-white font-medium text-sm">{session.group}</div>
                   <div className="text-white/40 text-xs mt-1">
                     {formatDate(session.date)}
@@ -125,7 +166,6 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       )}
 
-      {/* Spacer to push start button to bottom if history is closed */}
       {!showHistory && <div className="flex-1" />}
 
       {/* Start Button */}
