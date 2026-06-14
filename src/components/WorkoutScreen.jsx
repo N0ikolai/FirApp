@@ -4,6 +4,7 @@ import { saveSession, getVibrationSetting } from '../utils/storage';
 import ExitModal from './ExitModal';
 import AddExerciseModal from './AddExerciseModal';
 
+
 const ICON_MAP = {
   Dumbbell: Dumbbell,
   Cable: Cable,
