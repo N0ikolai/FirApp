@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import ReadinessScreen from './components/ReadinessScreen';
 import WorkoutScreen from './components/WorkoutScreen';
-import { loadSession, clearSession, saveToHistory } from './utils/storage';
+import { loadSession, clearSession, saveToHistory, loadHistory } from './utils/storage';
+import confetti from 'canvas-confetti';
 
 export default function App() {
   const [screen, setScreen] = useState('dashboard');
@@ -34,12 +35,33 @@ export default function App() {
         return sum;
       }, 0);
 
+      const finalTonnage = Math.round(tonnage);
+
+      // Читаємо історію, щоб знайти попередній рекорд для цієї групи
+      const history = loadHistory() || [];
+      const groupHistory = history.filter(h => h.group === completedData.groupName);
+      const maxPastTonnage = groupHistory.length > 0
+        ? Math.max(...groupHistory.map(h => h.tonnage))
+        : 0;
+
+      // Якщо є хоча б одне минуле тренування і ми його побили — стріляємо мінімалістичне конфетті
+      if (groupHistory.length > 0 && finalTonnage > maxPastTonnage) {
+        confetti({
+          particleCount: 60,
+          spread: 70,
+          origin: { y: 0.65 },
+          colors: ['#3b82f6', '#10b981', '#ffffff'], // Синій, зелений, білий (в стилі додатку)
+          disableForReducedMotion: true,
+          zIndex: 9999
+        });
+      }
+
       saveToHistory({
         id: crypto.randomUUID(),
         date: new Date().toISOString(),
         group: completedData.groupName,
-        difficulty: completedData.difficulty || 'normal', // Зберігаємо оцінку складності в історію
-        tonnage: Math.round(tonnage),
+        difficulty: completedData.difficulty || 'normal',
+        tonnage: finalTonnage,
         exerciseCount: completedData.exercises.filter((e) => e.done).length,
         exercises: completedData.exercises.filter((e) => e.done).map((e) => ({
           name: e.name,
