@@ -1,5 +1,12 @@
+Скажу прямо: таймер відпочинку — це ядро будь-якого трекера, бо без контролю часу між підходами ЦНС або не встигає відновитися, або ти остигаєш.
+
+Ми зробимо його автоматичним: як тільки ти натискаєш «Виконано», запускається таймер на 2 хвилини. Ти можеш або почекати, поки він сам дойде до нуля (буде вібрація і автоматичний перехід до наступної вправи), або натиснути «Пропустити», щоб не чекати. Також додав кнопку накинути ще +30 секунд, якщо підхід був дуже важким.
+
+Повністю виділи весь текст у файлі src/components/WorkoutScreen.jsx, видали його і встав цей готовий код (без мого тексту, тільки код):
+
+JavaScript
 import React, { useState, useEffect } from 'react';
-import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight, Timer } from 'lucide-react';
 import { saveSession, getVibrationSetting } from '../utils/storage';
 import ExitModal from './ExitModal';
 import AddExerciseModal from './AddExerciseModal';
@@ -26,9 +33,14 @@ export default function WorkoutScreen({ data, onFinish }) {
   );
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');
+
   const [showExitModal, setShowExitModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+
+  // Стейт для таймера
+  const [showTimer, setShowTimer] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(0);
 
   useEffect(() => {
     const currentEx = exercises[currentIndex];
@@ -37,6 +49,31 @@ export default function WorkoutScreen({ data, onFinish }) {
       setReps(currentEx.reps || currentEx.targetReps || '');
     }
   }, [currentIndex, exercises]);
+
+  // Логіка відліку таймера
+  useEffect(() => {
+    let interval;
+    if (showTimer && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            triggerVibration([100, 50, 100, 50, 100]); // Потрійна вібрація в кінці відпочинку
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [showTimer]);
+
+  // Якщо таймер дійшов до нуля природним шляхом
+  useEffect(() => {
+    if (showTimer && timerSeconds === 0) {
+      closeTimerAndNext();
+    }
+  }, [showTimer, timerSeconds]);
 
   const adjustWeight = (amount) => {
     triggerVibration(20);
@@ -57,6 +94,23 @@ export default function WorkoutScreen({ data, onFinish }) {
   const currentExercise = exercises[currentIndex];
   const IconComp = currentExercise ? ICON_MAP[currentExercise.icon] || Dumbbell : Dumbbell;
 
+  const closeTimerAndNext = () => {
+    setShowTimer(false);
+    triggerVibration(40);
+
+    const nextUndone = exercises.findIndex((e, i) => i > currentIndex && !e.done);
+    if (nextUndone >= 0) {
+      setCurrentIndex(nextUndone);
+    } else {
+      const anyUndone = exercises.findIndex((e) => !e.done);
+      if (anyUndone >= 0) {
+        setCurrentIndex(anyUndone);
+      } else if (currentIndex < exercises.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      }
+    }
+  };
+
   const handleDone = () => {
     triggerVibration(100);
 
@@ -69,18 +123,15 @@ export default function WorkoutScreen({ data, onFinish }) {
     };
     setExercises(updated);
 
-    const nextUndone = updated.findIndex((e, i) => i > currentIndex && !e.done);
+    const hasIncomplete = updated.some((e) => !e.done);
 
-    if (nextUndone >= 0) {
-      setCurrentIndex(nextUndone);
-    } else if (currentIndex < updated.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (hasIncomplete) {
+      // Запускаємо таймер на 120 секунд замість миттєвого переходу
+      setTimerSeconds(120);
+      setShowTimer(true);
     } else {
-      const hasIncomplete = updated.some((e) => !e.done);
-      if (!hasIncomplete) {
-        triggerVibration([200, 100, 200]);
-        setShowFeedback(true);
-      }
+      triggerVibration([200, 100, 200]);
+      setShowFeedback(true);
     }
   };
 
@@ -294,6 +345,39 @@ export default function WorkoutScreen({ data, onFinish }) {
           Додати вправу
         </button>
       </div>
+
+      {/* ТАЙМЕР ВІДПОЧИНКУ */}
+      {showTimer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/80 backdrop-blur-md">
+          <div className="bg-zinc-900/90 border border-white/10 rounded-3xl p-8 w-full max-w-sm shadow-2xl flex flex-col items-center">
+            <Timer className="w-8 h-8 text-blue-400 mb-3" />
+            <h2 className="text-xl font-bold text-white mb-1">Відпочинок</h2>
+            <p className="text-white/50 text-sm mb-6 text-center">Віднови дихання перед наступним підходом</p>
+
+            <div className="text-7xl font-black text-white mb-8 tabular-nums tracking-tighter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+              {Math.floor(timerSeconds / 60)}:{(timerSeconds % 60).toString().padStart(2, '0')}
+            </div>
+
+            <div className="flex gap-3 w-full">
+              <button
+                onClick={() => {
+                  triggerVibration(20);
+                  setTimerSeconds(prev => prev + 30);
+                }}
+                className="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/10 text-white transition-all font-bold"
+              >
+                +30 сек
+              </button>
+              <button
+                onClick={closeTimerAndNext}
+                className="flex-1 py-4 bg-blue-600/80 hover:bg-blue-600 rounded-2xl border border-blue-500/50 text-white transition-all font-bold shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+              >
+                Пропустити
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ОЦІНКА ТРЕНУВАННЯ */}
       {showFeedback && (
