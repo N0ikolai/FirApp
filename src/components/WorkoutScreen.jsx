@@ -1,8 +1,3 @@
-Скажу прямо: ты добавил функции adjustWeight и adjustReps в начало кода, но забыл добавить сами кнопки в визуальную часть под инпутами.
-
-Я встроил эти кнопки. Полностью выдели всё в файле src/components/WorkoutScreen.jsx и замени на этот код:
-
-JavaScript
 import React, { useState, useEffect } from 'react';
 import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { saveSession, getVibrationSetting } from '../utils/storage';
