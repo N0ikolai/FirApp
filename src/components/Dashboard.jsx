@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb } from 'lucide-react';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb, CalendarDays } from 'lucide-react';
 import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting } from '../utils/storage';
 
 const FITNESS_TIPS = [
@@ -13,6 +13,8 @@ const FITNESS_TIPS = [
   "Відпочивай між важкими підходами 2-3 хвилини. ЦНС потрібен час на відновлення."
 ];
 
+const DAYS_OF_WEEK = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
+
 export default function Dashboard({ onNewWorkout }) {
   const [history, setHistory] = useState(loadHistory());
   const [showSettings, setShowSettings] = useState(false);
@@ -20,11 +22,29 @@ export default function Dashboard({ onNewWorkout }) {
   const [vibrationEnabled, setVibrationEnabled] = useState(getVibrationSetting());
   const [currentTip, setCurrentTip] = useState('');
 
-  // Вибираємо випадкову пораду при завантаженні
+  // Стейт для графіка (читаємо з пам'яті або ставимо Пн, Ср, Пт за замовчуванням)
+  const [schedule, setSchedule] = useState(() => {
+    const saved = localStorage.getItem('workout_schedule');
+    return saved ? JSON.parse(saved) : [0, 2, 4]; // 0=Пн, 2=Ср, 4=Пт
+  });
+
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * FITNESS_TIPS.length);
     setCurrentTip(FITNESS_TIPS[randomIndex]);
   }, []);
+
+  // Зберігаємо графік при кожній зміні
+  useEffect(() => {
+    localStorage.setItem('workout_schedule', JSON.stringify(schedule));
+  }, [schedule]);
+
+  const toggleDay = (index) => {
+    setSchedule(prev =>
+      prev.includes(index)
+        ? prev.filter(d => d !== index)
+        : [...prev, index].sort()
+    );
+  };
 
   const stats = {
     totalWorkouts: history.length,
@@ -78,6 +98,9 @@ export default function Dashboard({ onNewWorkout }) {
   const chartData = [...history].slice(0, 7).reverse();
   const maxTonnage = chartData.length > 0 ? Math.max(...chartData.map(s => s.tonnage)) : 1;
 
+  // Визначаємо поточний день тижня (0 = Пн, 6 = Нд)
+  const todayIdx = (new Date().getDay() + 6) % 7;
+
   return (
     <div className="p-5 max-w-lg mx-auto min-h-dvh flex flex-col relative z-10">
      {/* Header */}
@@ -110,13 +133,48 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       </div>
 
+      {/* Weekly Schedule Planner */}
+      <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <CalendarDays className="w-5 h-5 text-blue-400" />
+            <h2 className="font-medium text-white text-sm">Графік тренувань</h2>
+          </div>
+          <span className="text-xs text-white/30">Натисни, щоб змінити</span>
+        </div>
+        <div className="flex justify-between gap-1">
+          {DAYS_OF_WEEK.map((day, idx) => {
+            const isPlanned = schedule.includes(idx);
+            const isToday = todayIdx === idx;
+
+            return (
+              <button
+                key={day}
+                onClick={() => toggleDay(idx)}
+                className={`flex-1 aspect-[3/4] rounded-xl flex flex-col items-center justify-center transition-all relative ${
+                  isPlanned
+                    ? 'bg-blue-600/20 border border-blue-500/50 text-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.2)]'
+                    : 'bg-white/5 border border-white/5 text-white/40 hover:bg-white/10'
+                }`}
+              >
+                <span className="text-xs font-bold">{day}</span>
+                {/* Точка поточного дня */}
+                {isToday && (
+                  <div className="absolute bottom-2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Fitness Tip Card */}
       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-6 shadow-xl flex gap-4 items-start">
         <div className="p-2 bg-yellow-500/10 rounded-xl shrink-0">
           <Lightbulb className="w-5 h-5 text-yellow-500" />
         </div>
         <div>
-          <h3 className="text-white font-medium text-sm mb-1">Tips</h3>
+          <h3 className="text-white font-medium text-sm mb-1">Реальність</h3>
           <p className="text-white/60 text-xs leading-relaxed">{currentTip}</p>
         </div>
       </div>
