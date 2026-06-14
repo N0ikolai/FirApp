@@ -1,3 +1,8 @@
+Скажу прямо: ты добавил функции adjustWeight и adjustReps в начало кода, но забыл добавить сами кнопки в визуальную часть под инпутами.
+
+Я встроил эти кнопки. Полностью выдели всё в файле src/components/WorkoutScreen.jsx и замени на этот код:
+
+JavaScript
 import React, { useState, useEffect } from 'react';
 import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { saveSession, getVibrationSetting } from '../utils/storage';
@@ -28,7 +33,7 @@ export default function WorkoutScreen({ data, onFinish }) {
   const [reps, setReps] = useState('');
   const [showExitModal, setShowExitModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showFeedback, setShowFeedback] = useState(false); // Нове вікно оцінки
+  const [showFeedback, setShowFeedback] = useState(false);
 
   useEffect(() => {
     const currentEx = exercises[currentIndex];
@@ -37,6 +42,18 @@ export default function WorkoutScreen({ data, onFinish }) {
       setReps(currentEx.reps || currentEx.targetReps || '');
     }
   }, [currentIndex, exercises]);
+
+  const adjustWeight = (amount) => {
+    triggerVibration(20);
+    const current = parseFloat(weight) || 0;
+    setWeight(Math.max(0, current + amount).toString());
+  };
+
+  const adjustReps = (amount) => {
+    triggerVibration(20);
+    const current = parseInt(reps, 10) || 0;
+    setReps(Math.max(0, current + amount).toString());
+  };
 
   useEffect(() => {
     saveSession({ ...data, exercises });
@@ -67,7 +84,7 @@ export default function WorkoutScreen({ data, onFinish }) {
       const hasIncomplete = updated.some((e) => !e.done);
       if (!hasIncomplete) {
         triggerVibration([200, 100, 200]);
-        setShowFeedback(true); // Відкриваємо вікно замість миттєвого виходу
+        setShowFeedback(true);
       }
     }
   };
@@ -78,12 +95,12 @@ export default function WorkoutScreen({ data, onFinish }) {
     if (hasIncomplete) {
       setShowExitModal(true);
     } else {
-      setShowFeedback(true); // Відкриваємо вікно оцінки
+      setShowFeedback(true);
     }
   };
 
   const handleConfirmExit = () => {
-    onFinish({ ...data, exercises }); // Примусовий вихід без оцінки
+    onFinish({ ...data, exercises });
   };
 
   const handleFeedbackSubmit = (difficulty) => {
@@ -183,6 +200,7 @@ export default function WorkoutScreen({ data, onFinish }) {
              </div>
           )}
 
+          {/* Inputs with Presets */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className="text-xs text-white/50 mb-2 block text-center uppercase tracking-widest">Вага (кг)</label>
@@ -194,7 +212,16 @@ export default function WorkoutScreen({ data, onFinish }) {
                 placeholder="0"
                 className="w-full bg-black/20 border border-white/10 rounded-2xl py-4 text-center text-3xl font-bold text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all shadow-inner"
               />
+              <div className="flex gap-2 mt-2">
+                <button onClick={() => adjustWeight(-2.5)} className="flex-1 py-2 bg-white/5 rounded-xl border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium">
+                  -2.5
+                </button>
+                <button onClick={() => adjustWeight(2.5)} className="flex-1 py-2 bg-white/5 rounded-xl border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium">
+                  +2.5
+                </button>
+              </div>
             </div>
+
             <div>
               <label className="text-xs text-white/50 mb-2 block text-center uppercase tracking-widest">Повторення</label>
               <input
@@ -205,6 +232,14 @@ export default function WorkoutScreen({ data, onFinish }) {
                 placeholder="0"
                 className="w-full bg-black/20 border border-white/10 rounded-2xl py-4 text-center text-3xl font-bold text-white outline-none focus:border-blue-500/50 focus:bg-blue-500/5 transition-all shadow-inner"
               />
+              <div className="flex gap-2 mt-2">
+                <button onClick={() => adjustReps(-1)} className="flex-1 py-2 bg-white/5 rounded-xl border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium">
+                  -1
+                </button>
+                <button onClick={() => adjustReps(1)} className="flex-1 py-2 bg-white/5 rounded-xl border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium">
+                  +1
+                </button>
+              </div>
             </div>
           </div>
 
