@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb, CalendarDays } from 'lucide-react';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb, Calendar } from 'lucide-react';
 import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting } from '../utils/storage';
 
 const FITNESS_TIPS = [
@@ -16,16 +16,21 @@ const FITNESS_TIPS = [
 const DAYS_OF_WEEK = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 
 export default function Dashboard({ onNewWorkout }) {
-  const [history, setHistory] = useState(loadHistory());
+  // Страховка: якщо loadHistory повертає null/undefined, ставимо порожній масив
+  const [history, setHistory] = useState(() => loadHistory() || []);
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(getVibrationSetting());
   const [currentTip, setCurrentTip] = useState('');
 
-  // Стейт для графіка (читаємо з пам'яті або ставимо Пн, Ср, Пт за замовчуванням)
+  // Страховка: try-catch на випадок битого JSON в пам'яті
   const [schedule, setSchedule] = useState(() => {
-    const saved = localStorage.getItem('workout_schedule');
-    return saved ? JSON.parse(saved) : [0, 2, 4]; // 0=Пн, 2=Ср, 4=Пт
+    try {
+      const saved = localStorage.getItem('workout_schedule');
+      return saved ? JSON.parse(saved) : [0, 2, 4]; // 0=Пн, 2=Ср, 4=Пт
+    } catch (e) {
+      return [0, 2, 4];
+    }
   });
 
   useEffect(() => {
@@ -33,7 +38,6 @@ export default function Dashboard({ onNewWorkout }) {
     setCurrentTip(FITNESS_TIPS[randomIndex]);
   }, []);
 
-  // Зберігаємо графік при кожній зміні
   useEffect(() => {
     localStorage.setItem('workout_schedule', JSON.stringify(schedule));
   }, [schedule]);
@@ -62,7 +66,7 @@ export default function Dashboard({ onNewWorkout }) {
     e.stopPropagation();
     if (window.confirm('Видалити це тренування з історії?')) {
       deleteFromHistory(id);
-      setHistory(loadHistory());
+      setHistory(loadHistory() || []);
     }
   };
 
@@ -98,7 +102,6 @@ export default function Dashboard({ onNewWorkout }) {
   const chartData = [...history].slice(0, 7).reverse();
   const maxTonnage = chartData.length > 0 ? Math.max(...chartData.map(s => s.tonnage)) : 1;
 
-  // Визначаємо поточний день тижня (0 = Пн, 6 = Нд)
   const todayIdx = (new Date().getDay() + 6) % 7;
 
   return (
@@ -137,7 +140,7 @@ export default function Dashboard({ onNewWorkout }) {
       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <CalendarDays className="w-5 h-5 text-blue-400" />
+            <Calendar className="w-5 h-5 text-blue-400" />
             <h2 className="font-medium text-white text-sm">Графік тренувань</h2>
           </div>
           <span className="text-xs text-white/30">Натисни, щоб змінити</span>
@@ -158,7 +161,6 @@ export default function Dashboard({ onNewWorkout }) {
                 }`}
               >
                 <span className="text-xs font-bold">{day}</span>
-                {/* Точка поточного дня */}
                 {isToday && (
                   <div className="absolute bottom-2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
                 )}
@@ -174,7 +176,7 @@ export default function Dashboard({ onNewWorkout }) {
           <Lightbulb className="w-5 h-5 text-yellow-500" />
         </div>
         <div>
-          <h3 className="text-white font-medium text-sm mb-1">Реальність</h3>
+          <h3 className="text-white font-medium text-sm mb-1">Tips</h3>
           <p className="text-white/60 text-xs leading-relaxed">{currentTip}</p>
         </div>
       </div>
