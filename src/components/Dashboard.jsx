@@ -193,7 +193,7 @@ export default function Dashboard({ onNewWorkout }) {
               const bgColorClass = getGroupColor(session.group).split(' ')[0];
 
               return (
-                <div key={session.id} className="w-full flex flex-col items-center gap-2 group relative">
+                <div key={session.id} className="w-full h-full flex flex-col items-center justify-end group relative">
                   <div className="absolute -top-8 bg-zinc-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
                     {session.tonnage} кг
                   </div>
