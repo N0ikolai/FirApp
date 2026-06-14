@@ -38,6 +38,7 @@ export default function App() {
         id: crypto.randomUUID(),
         date: new Date().toISOString(),
         group: completedData.groupName,
+        difficulty: completedData.difficulty || 'normal', // Зберігаємо оцінку складності в історію
         tonnage: Math.round(tonnage),
         exerciseCount: completedData.exercises.filter((e) => e.done).length,
         exercises: completedData.exercises.filter((e) => e.done).map((e) => ({

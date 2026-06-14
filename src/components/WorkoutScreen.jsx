@@ -16,6 +16,7 @@ const triggerVibration = (pattern) => {
     }
   }
 };
+
 export default function WorkoutScreen({ data, onFinish }) {
   const [exercises, setExercises] = useState(data.exercises);
   const [currentIndex, setCurrentIndex] = useState(
@@ -27,6 +28,7 @@ export default function WorkoutScreen({ data, onFinish }) {
   const [reps, setReps] = useState('');
   const [showExitModal, setShowExitModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false); // Нове вікно оцінки
 
   useEffect(() => {
     const currentEx = exercises[currentIndex];
@@ -64,8 +66,8 @@ export default function WorkoutScreen({ data, onFinish }) {
     } else {
       const hasIncomplete = updated.some((e) => !e.done);
       if (!hasIncomplete) {
-        triggerVibration([200, 100, 200]); // Подвійна вібрація на фініш
-        onFinish({ ...data, exercises: updated });
+        triggerVibration([200, 100, 200]);
+        setShowFeedback(true); // Відкриваємо вікно замість миттєвого виходу
       }
     }
   };
@@ -76,12 +78,16 @@ export default function WorkoutScreen({ data, onFinish }) {
     if (hasIncomplete) {
       setShowExitModal(true);
     } else {
-      onFinish({ ...data, exercises });
+      setShowFeedback(true); // Відкриваємо вікно оцінки
     }
   };
 
   const handleConfirmExit = () => {
-    onFinish({ ...data, exercises });
+    onFinish({ ...data, exercises }); // Примусовий вихід без оцінки
+  };
+
+  const handleFeedbackSubmit = (difficulty) => {
+    onFinish({ ...data, exercises, difficulty });
   };
 
   const handleAddExercise = (newExercise) => {
@@ -140,7 +146,6 @@ export default function WorkoutScreen({ data, onFinish }) {
             Вправа {currentIndex + 1} <span className="text-white/30">з</span> {totalExercises}
           </div>
 
-          {/* Image or Icon */}
           <div className="flex justify-center mb-6">
             {currentExercise.image ? (
               <div className="w-full h-48 rounded-2xl bg-black/30 border border-white/10 overflow-hidden flex items-center justify-center p-2 shadow-inner">
@@ -157,7 +162,6 @@ export default function WorkoutScreen({ data, onFinish }) {
             )}
           </div>
 
-          {/* Exercise name */}
           <h2 className="text-2xl font-bold text-white text-center mb-1">
             {currentExercise.name}
           </h2>
@@ -165,7 +169,6 @@ export default function WorkoutScreen({ data, onFinish }) {
             {currentExercise.targetSets} підходів {currentExercise.targetReps ? `× ${currentExercise.targetReps}` : ''}
           </p>
 
-          {/* Past Record Info */}
           {currentExercise.lastWeight && (
              <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-3 mb-6 text-center flex flex-col items-center">
                <span className="text-xs text-blue-300/70 mb-1 uppercase tracking-wider">Минулого разу:</span>
@@ -180,7 +183,6 @@ export default function WorkoutScreen({ data, onFinish }) {
              </div>
           )}
 
-          {/* Inputs */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className="text-xs text-white/50 mb-2 block text-center uppercase tracking-widest">Вага (кг)</label>
@@ -206,7 +208,6 @@ export default function WorkoutScreen({ data, onFinish }) {
             </div>
           </div>
 
-          {/* Navigation & Done buttons */}
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => {
@@ -252,7 +253,6 @@ export default function WorkoutScreen({ data, onFinish }) {
           </div>
         </div>
 
-        {/* Add exercise button */}
         <button
           onClick={() => {
             triggerVibration(40);
@@ -265,7 +265,39 @@ export default function WorkoutScreen({ data, onFinish }) {
         </button>
       </div>
 
-      {/* Modals */}
+      {/* ОЦІНКА ТРЕНУВАННЯ */}
+      {showFeedback && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/80 backdrop-blur-sm">
+          <div className="bg-zinc-900/90 border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <h2 className="text-xl font-bold text-white text-center mb-2">Оцініть навантаження</h2>
+            <p className="text-white/50 text-xs text-center mb-6">Це допоможе налаштувати ваги наступного разу</p>
+
+            <div className="space-y-3">
+              <button
+                onClick={() => handleFeedbackSubmit('easy')}
+                className="w-full p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-2xl font-bold hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                🟢 Занадто легко (Додати вагу)
+              </button>
+
+              <button
+                onClick={() => handleFeedbackSubmit('normal')}
+                className="w-full p-4 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-2xl font-bold hover:bg-blue-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                🔵 Нормально (Залишити так)
+              </button>
+
+              <button
+                onClick={() => handleFeedbackSubmit('hard')}
+                className="w-full p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-2xl font-bold hover:bg-red-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                🔴 Дуже важко (Зменшити вагу)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showExitModal && (
         <ExitModal
           onConfirm={handleConfirmExit}

@@ -1,6 +1,20 @@
+Скажу прямо: чтобы математика сработала, нам нужно вытащить историю прямо перед стартом тренировки, найти там прошлый раз для этой же группы мышц, посмотреть оценку и переписать suggestedWeight.
+
+Логика жесткая:
+
+Было easy — накидываем +2.5 кг.
+
+Было hard — срезаем -2.5 кг (чтобы не словить перетрен).
+
+Было normal — оставляем прошлый вес.
+
+Я добавил импорт хранилища и внедрил этот алгоритм пересчета прямо в функцию handleStart. Полностью замени код в src/components/ReadinessScreen.jsx:
+
+JavaScript
 import React, { useState } from 'react';
 import { ArrowLeft, Battery, BatteryMedium, BatteryFull, Flame, Zap } from 'lucide-react';
 import { MUSCLE_GROUPS, generateWorkout, getReadinessAdvice } from '../utils/workoutData';
+import { loadHistory } from '../utils/storage';
 
 const READINESS_LEVELS = [
   { value: 1, icon: Battery, color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/30' },
@@ -16,10 +30,38 @@ export default function ReadinessScreen({ onStart, onBack }) {
 
   const handleStart = () => {
     if (!readiness || !selectedGroup) return;
-    const exercises = generateWorkout(selectedGroup, readiness);
+
+    let exercises = generateWorkout(selectedGroup, readiness);
+    const groupName = MUSCLE_GROUPS[selectedGroup].name;
+
+    // Читаємо історію і шукаємо останнє тренування на цю ж групу
+    const history = loadHistory();
+    const lastWorkout = history
+      .filter(w => w.group === groupName)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+
+    // Якщо є минуле тренування з оцінкою – коригуємо ваги
+    if (lastWorkout && lastWorkout.difficulty) {
+      exercises = exercises.map(ex => {
+        const pastEx = lastWorkout.exercises.find(e => e.name === ex.name);
+        if (pastEx && pastEx.weight) {
+          let weight = parseFloat(pastEx.weight);
+
+          if (lastWorkout.difficulty === 'easy') {
+            weight += 2.5; // Накидаємо за легке
+          } else if (lastWorkout.difficulty === 'hard') {
+            weight = Math.max(0, weight - 2.5); // Зрізаємо за важке
+          }
+
+          return { ...ex, suggestedWeight: weight.toString() };
+        }
+        return ex;
+      });
+    }
+
     onStart({
       groupKey: selectedGroup,
-      groupName: MUSCLE_GROUPS[selectedGroup].name,
+      groupName,
       readiness,
       exercises,
     });

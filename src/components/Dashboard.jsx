@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb } from 'lucide-react';
 import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting } from '../utils/storage';
+
+const FITNESS_TIPS = [
+  "База ростить масу. Ізоляція лише шліфує деталі. Фокусуйся на важких багатосуглобових вправах.",
+  "М'язи ростуть не в залі, а коли ти спиш і їси. Не ігноруй відновлення.",
+  "Не женись за вагою, якщо страждає техніка. Травма відкине тебе на місяці назад.",
+  "Відчуваєш гострий біль у суглобах — знижуй вагу або міняй вправу. Героїзм тут зайвий.",
+  "Твій єдиний конкурент — це ти сам на минулому тренуванні. Намагайся зробити хоча б на 1 повторення більше.",
+  "Якщо тренування пройшло занадто легко — час додавати робочу вагу на штангу.",
+  "Пий достатньо води між підходами. Навіть легке зневоднення жорстко ріже силові показники.",
+  "Відпочивай між важкими підходами 2-3 хвилини. ЦНС потрібен час на відновлення."
+];
 
 export default function Dashboard({ onNewWorkout }) {
   const [history, setHistory] = useState(loadHistory());
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(getVibrationSetting());
+  const [currentTip, setCurrentTip] = useState('');
+
+  // Вибираємо випадкову пораду при завантаженні
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * FITNESS_TIPS.length);
+    setCurrentTip(FITNESS_TIPS[randomIndex]);
+  }, []);
 
   const stats = {
     totalWorkouts: history.length,
@@ -89,6 +107,17 @@ export default function Dashboard({ onNewWorkout }) {
             <Activity className="w-3 h-3" /> Тоннаж
           </div>
           <div className="text-2xl font-bold text-white">{displayTonnage}</div>
+        </div>
+      </div>
+
+      {/* Fitness Tip Card */}
+      <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-6 shadow-xl flex gap-4 items-start">
+        <div className="p-2 bg-yellow-500/10 rounded-xl shrink-0">
+          <Lightbulb className="w-5 h-5 text-yellow-500" />
+        </div>
+        <div>
+          <h3 className="text-white font-medium text-sm mb-1">Реальність</h3>
+          <p className="text-white/60 text-xs leading-relaxed">{currentTip}</p>
         </div>
       </div>
 
