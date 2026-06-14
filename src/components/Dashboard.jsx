@@ -116,7 +116,7 @@ export default function Dashboard({ onNewWorkout }) {
           <Lightbulb className="w-5 h-5 text-yellow-500" />
         </div>
         <div>
-          <h3 className="text-white font-medium text-sm mb-1">Реальність</h3>
+          <h3 className="text-white font-medium text-sm mb-1">Tips</h3>
           <p className="text-white/60 text-xs leading-relaxed">{currentTip}</p>
         </div>
       </div>
