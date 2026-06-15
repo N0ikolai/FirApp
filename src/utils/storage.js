@@ -66,9 +66,18 @@ export function deleteFromHistory(id) {
 
 export function getVibrationSetting() {
   const val = localStorage.getItem('vibration_enabled');
-  return val !== 'false'; // Увімкнено за замовчуванням
+  return val !== 'false';
 }
 
 export function setVibrationSetting(isEnabled) {
   localStorage.setItem('vibration_enabled', isEnabled);
+}
+
+export function getTimerSetting() {
+  const val = localStorage.getItem('timer_enabled');
+  return val !== 'false';
+}
+
+export function setTimerSetting(isEnabled) {
+  localStorage.setItem('timer_enabled', isEnabled);
 }

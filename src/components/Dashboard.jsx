@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb, Calendar } from 'lucide-react';
-import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting } from '../utils/storage';
+import { Settings, Activity, Trash2, History, Plus, X, TrendingUp, Smartphone, Lightbulb, Calendar, Timer } from 'lucide-react';
+import { clearAllData, loadHistory, deleteFromHistory, getVibrationSetting, setVibrationSetting, getTimerSetting, setTimerSetting } from '../utils/storage';
 
 const FITNESS_TIPS = [
   "База ростить масу. Ізоляція лише шліфує деталі. Фокусуйся на важких багатосуглобових вправах.",
@@ -16,18 +16,17 @@ const FITNESS_TIPS = [
 const DAYS_OF_WEEK = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
 
 export default function Dashboard({ onNewWorkout }) {
-  // Страховка: якщо loadHistory повертає null/undefined, ставимо порожній масив
   const [history, setHistory] = useState(() => loadHistory() || []);
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [vibrationEnabled, setVibrationEnabled] = useState(getVibrationSetting());
+  const [timerEnabled, setTimerEnabled] = useState(getTimerSetting());
   const [currentTip, setCurrentTip] = useState('');
 
-  // Страховка: try-catch на випадок битого JSON в пам'яті
   const [schedule, setSchedule] = useState(() => {
     try {
       const saved = localStorage.getItem('workout_schedule');
-      return saved ? JSON.parse(saved) : [0, 2, 4]; // 0=Пн, 2=Ср, 4=Пт
+      return saved ? JSON.parse(saved) : [0, 2, 4];
     } catch (e) {
       return [0, 2, 4];
     }
@@ -76,6 +75,12 @@ export default function Dashboard({ onNewWorkout }) {
     setVibrationSetting(newVal);
   };
 
+  const handleToggleTimer = () => {
+    const newVal = !timerEnabled;
+    setTimerEnabled(newVal);
+    setTimerSetting(newVal);
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const today = new Date();
@@ -106,7 +111,6 @@ export default function Dashboard({ onNewWorkout }) {
 
   return (
     <div className="p-5 max-w-lg mx-auto min-h-dvh flex flex-col relative z-10">
-     {/* Header */}
       <div className="pt-8 pb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">FirApp</h1>
@@ -120,7 +124,6 @@ export default function Dashboard({ onNewWorkout }) {
         </button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
           <div className="text-white/50 text-xs mb-1 flex items-center gap-1">
@@ -136,7 +139,6 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       </div>
 
-      {/* Weekly Schedule Planner */}
       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-4 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -170,7 +172,6 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       </div>
 
-      {/* Fitness Tip Card */}
       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-6 shadow-xl flex gap-4 items-start">
         <div className="p-2 bg-yellow-500/10 rounded-xl shrink-0">
           <Lightbulb className="w-5 h-5 text-yellow-500" />
@@ -181,7 +182,6 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       </div>
 
-      {/* Mini Chart */}
       {chartData.length > 0 && (
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-6 shadow-xl">
           <div className="text-white/50 text-xs mb-4 flex items-center gap-1">
@@ -208,7 +208,6 @@ export default function Dashboard({ onNewWorkout }) {
         </div>
       )}
 
-      {/* History Toggle Button */}
       <button
         onClick={() => setShowHistory(!showHistory)}
         className={`w-full flex items-center justify-between p-4 mb-4 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl transition-colors ${showHistory ? 'bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
@@ -222,7 +221,6 @@ export default function Dashboard({ onNewWorkout }) {
         </span>
       </button>
 
-      {/* History List */}
       {showHistory && (
         <div className="flex-1 overflow-y-auto mb-6 space-y-3 pb-24">
           {history.length === 0 ? (
@@ -259,7 +257,6 @@ export default function Dashboard({ onNewWorkout }) {
 
       {!showHistory && <div className="flex-1" />}
 
-      {/* Start Button */}
       <div className={`${showHistory ? 'fixed bottom-5 left-5 right-5 max-w-lg mx-auto z-20' : ''}`}>
         <button
           onClick={onNewWorkout}
@@ -269,7 +266,6 @@ export default function Dashboard({ onNewWorkout }) {
         </button>
       </div>
 
-      {/* Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/60 backdrop-blur-sm">
           <div className="bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
@@ -280,7 +276,19 @@ export default function Dashboard({ onNewWorkout }) {
               </button>
             </div>
 
-            {/* Toggle Vibration */}
+            <button
+              onClick={handleToggleTimer}
+              className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors mb-3"
+            >
+              <div className="flex items-center gap-3">
+                <Timer className="w-5 h-5 text-blue-400" />
+                Таймер відпочинку
+              </div>
+              <div className={`w-12 h-6 rounded-full transition-colors relative ${timerEnabled ? 'bg-blue-500' : 'bg-white/10'}`}>
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${timerEnabled ? 'left-7' : 'left-1'}`} />
+              </div>
+            </button>
+
             <button
               onClick={handleToggleVibration}
               className="w-full flex items-center justify-between p-4 bg-white/5 border border-white/10 text-white font-medium rounded-xl hover:bg-white/10 transition-colors mb-3"
@@ -294,7 +302,6 @@ export default function Dashboard({ onNewWorkout }) {
               </div>
             </button>
 
-            {/* Clear Data */}
             <button
               onClick={handleClearData}
               className="w-full flex items-center justify-center gap-2 p-4 bg-red-500/10 border border-red-500/20 text-red-500 font-medium rounded-xl hover:bg-red-500/20 transition-colors"

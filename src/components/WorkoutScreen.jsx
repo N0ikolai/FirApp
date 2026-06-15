@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight, Timer } from 'lucide-react';
-import { saveSession, getVibrationSetting } from '../utils/storage';
+import { saveSession, getVibrationSetting, getTimerSetting } from '../utils/storage';
 import ExitModal from './ExitModal';
 import AddExerciseModal from './AddExerciseModal';
 
@@ -119,9 +119,20 @@ export default function WorkoutScreen({ data, onFinish }) {
     const hasIncomplete = updated.some((e) => !e.done);
 
     if (hasIncomplete) {
-      // Запускаємо таймер на 120 секунд замість миттєвого переходу
-      setTimerSeconds(120);
-      setShowTimer(true);
+      if (getTimerSetting()) {
+        // Запускаємо таймер
+        setTimerSeconds(120);
+        setShowTimer(true);
+      } else {
+        // Якщо таймер вимкнено в налаштуваннях - просто переходимо далі
+        const nextUndone = updated.findIndex((e, i) => i > currentIndex && !e.done);
+        if (nextUndone >= 0) {
+          setCurrentIndex(nextUndone);
+        } else {
+          const anyUndone = updated.findIndex((e) => !e.done);
+          if (anyUndone >= 0) setCurrentIndex(anyUndone);
+        }
+      }
     } else {
       triggerVibration([200, 100, 200]);
       setShowFeedback(true);
