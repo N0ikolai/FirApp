@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight, Timer } from 'lucide-react';
+import { Dumbbell, Cable, Check, Plus, X, ChevronLeft, ChevronRight, Timer, RefreshCw } from 'lucide-react';
 import { saveSession, getVibrationSetting, getTimerSetting } from '../utils/storage';
 import ExitModal from './ExitModal';
 import AddExerciseModal from './AddExerciseModal';
+import ReplaceExerciseModal from './ReplaceExerciseModal'; // <-- Підключаємо нове вікно
 
 const ICON_MAP = {
   Dumbbell: Dumbbell,
@@ -30,6 +31,7 @@ export default function WorkoutScreen({ data, onFinish }) {
   const [showExitModal, setShowExitModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showReplaceModal, setShowReplaceModal] = useState(false); // <-- Стейт для заміни
 
   // Стейт для таймера
   const [showTimer, setShowTimer] = useState(false);
@@ -51,7 +53,7 @@ export default function WorkoutScreen({ data, onFinish }) {
         setTimerSeconds((prev) => {
           if (prev <= 1) {
             clearInterval(interval);
-            triggerVibration([100, 50, 100, 50, 100]); // Потрійна вібрація в кінці відпочинку
+            triggerVibration([100, 50, 100, 50, 100]);
             return 0;
           }
           return prev - 1;
@@ -120,11 +122,9 @@ export default function WorkoutScreen({ data, onFinish }) {
 
     if (hasIncomplete) {
       if (getTimerSetting()) {
-        // Запускаємо таймер
         setTimerSeconds(120);
         setShowTimer(true);
       } else {
-        // Якщо таймер вимкнено в налаштуваннях - просто переходимо далі
         const nextUndone = updated.findIndex((e, i) => i > currentIndex && !e.done);
         if (nextUndone >= 0) {
           setCurrentIndex(nextUndone);
@@ -137,6 +137,29 @@ export default function WorkoutScreen({ data, onFinish }) {
       triggerVibration([200, 100, 200]);
       setShowFeedback(true);
     }
+  };
+
+  // <-- Логіка заміни вправи
+  const handleReplaceExercise = (newExerciseDef) => {
+    triggerVibration(40);
+    const updated = [...exercises];
+
+    updated[currentIndex] = {
+      ...updated[currentIndex],
+      name: newExerciseDef.name,
+      icon: newExerciseDef.icon || 'Dumbbell',
+      image: '', // Скидаємо стару картинку
+      lastWeight: '', // Скидаємо старі рекорди
+      lastReps: '',
+      suggestedWeight: '',
+      weight: '',
+      reps: ''
+    };
+
+    setExercises(updated);
+    setWeight('');
+    setReps('');
+    setShowReplaceModal(false);
   };
 
   const handleExit = () => {
@@ -207,7 +230,7 @@ export default function WorkoutScreen({ data, onFinish }) {
 
       {/* Current Exercise Card */}
       <div className="flex-1 flex flex-col justify-center">
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 mb-6 shadow-2xl">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 mb-6 shadow-2xl relative">
 
           <div className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-4 text-center">
             Вправа {currentIndex + 1} <span className="text-white/30">з</span> {totalExercises}
@@ -229,9 +252,23 @@ export default function WorkoutScreen({ data, onFinish }) {
             )}
           </div>
 
-          <h2 className="text-2xl font-bold text-white text-center mb-1">
-            {currentExercise.name}
-          </h2>
+          {/* <-- Кнопка заміни біля назви вправи */}
+          <div className="flex items-center justify-center gap-3 mb-1">
+            <h2 className="text-2xl font-bold text-white text-center">
+              {currentExercise.name}
+            </h2>
+            <button
+              onClick={() => {
+                triggerVibration(20);
+                setShowReplaceModal(true);
+              }}
+              className="p-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-white transition-colors flex items-center justify-center shadow-md"
+              title="Замінити вправу"
+            >
+              <RefreshCw className="w-4 h-4 text-blue-400" />
+            </button>
+          </div>
+
           <p className="text-white/50 text-sm text-center mb-6">
             {currentExercise.targetSets} підходів {currentExercise.targetReps ? `× ${currentExercise.targetReps}` : ''}
           </p>
@@ -414,6 +451,15 @@ export default function WorkoutScreen({ data, onFinish }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* <-- ВІДМАЛЬОВКА МОДАЛКИ ЗАМІНИ --> */}
+      {showReplaceModal && (
+        <ReplaceExerciseModal
+          currentExerciseName={currentExercise.name}
+          onSelect={handleReplaceExercise}
+          onClose={() => setShowReplaceModal(false)}
+        />
       )}
 
       {showExitModal && (

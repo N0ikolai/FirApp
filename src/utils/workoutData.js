@@ -1,6 +1,67 @@
 import { loadHistory } from './storage';
 
+// --- БАЗА ВПРАВ ДЛЯ ЗАМІНИ ---
+export const EXERCISE_DATABASE = {
+  'Ноги': [
+    { name: 'Присідання зі штангою', icon: 'Dumbbell' },
+    { name: 'Жим ногами', icon: 'Dumbbell' },
+    { name: 'Розгинання ніг сидячи', icon: 'Cable' },
+    { name: 'Згинання ніг лежачи', icon: 'Cable' },
+    { name: 'Випади з гантелями', icon: 'Dumbbell' },
+    { name: 'Румунська тяга', icon: 'Dumbbell' },
+    { name: 'Зведення/розведення ніг у тренажері', icon: 'Cable' }
+  ],
+  'Плечі': [
+    { name: 'Армійський жим стоячи', icon: 'Dumbbell' },
+    { name: 'Жим гантелей сидячи', icon: 'Dumbbell' },
+    { name: 'Махи гантелями в сторони', icon: 'Dumbbell' },
+    { name: 'Тяга штанги до підборіддя', icon: 'Dumbbell' },
+    { name: 'Махи в нахилі (задня дельта)', icon: 'Dumbbell' },
+    { name: 'Жим в тренажері Сміта', icon: 'Dumbbell' }
+  ],
+  'Груди': [
+    { name: 'Жим штанги лежачи', icon: 'Dumbbell' },
+    { name: 'Жим гантелей на похилій лаві', icon: 'Dumbbell' },
+    { name: 'Розведення гантелей лежачи', icon: 'Dumbbell' },
+    { name: 'Зведення рук у кросовері', icon: 'Cable' },
+    { name: 'Віджимання на брусах', icon: 'Dumbbell' },
+    { name: 'Жим у тренажері (Хаммер)', icon: 'Cable' }
+  ],
+  'Біцепс': [
+    { name: 'Підйом штанги на біцепс', icon: 'Dumbbell' },
+    { name: 'Підйом гантелей із супінацією', icon: 'Dumbbell' },
+    { name: 'Лава Скотта (EZ-штанга)', icon: 'Dumbbell' },
+    { name: '«Молотки» з гантелями', icon: 'Dumbbell' },
+    { name: 'Згинання рук у нижньому блоці', icon: 'Cable' }
+  ],
+  'Спина': [
+    { name: 'Підтягування широким хватом', icon: 'Dumbbell' },
+    { name: 'Тяга штанги в нахилі', icon: 'Dumbbell' },
+    { name: 'Тяга нижнього блоку до пояса', icon: 'Cable' },
+    { name: 'Тяга гантелі однією рукою', icon: 'Dumbbell' },
+    { name: 'Тяга верхнього блоку', icon: 'Cable' },
+    { name: 'Пуловер у кросовері', icon: 'Cable' }
+  ],
+  'Трицепс': [
+    { name: 'Жим вузьким хватом лежачи', icon: 'Dumbbell' },
+    { name: 'Французький жим EZ-штангою', icon: 'Dumbbell' },
+    { name: 'Розгинання на блоці з канатом', icon: 'Cable' },
+    { name: 'Розгинання гантелі з-за голови', icon: 'Dumbbell' },
+    { name: 'Віджимання від лави ззаду', icon: 'Dumbbell' }
+  ]
+};
 
+// Хелпер: шукає до якої групи м'язів належить вправа
+export const getMuscleGroupByExercise = (exerciseName) => {
+  for (const [group, exercises] of Object.entries(EXERCISE_DATABASE)) {
+    if (exercises.some(ex => ex.name === exerciseName)) {
+      return group;
+    }
+  }
+  return null; // Якщо вправу не знайдено в базі
+};
+
+// --- ОСНОВНІ ШАБЛОНИ ---
 export const MUSCLE_GROUPS = {
   day1: {
     name: 'День 1: Ноги та плечі',
@@ -92,9 +153,9 @@ export function generateWorkout(groupKey, readinessLevel) {
       image: ex.image,
       targetSets: adjustedSets,
       targetReps: ex.reps,
-      lastWeight: lastWeight, // Сохраняем инфу о прошлом разе
+      lastWeight: lastWeight,
       lastReps: lastReps,
-      suggestedWeight: suggestedWeight, // Сохраняем предложенный вес
+      suggestedWeight: suggestedWeight,
       completedSets: 0,
       weight: '',
       reps: '',
