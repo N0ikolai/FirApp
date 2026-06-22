@@ -148,8 +148,8 @@ export default function WorkoutScreen({ data, onFinish }) {
       ...updated[currentIndex],
       name: newExerciseDef.name,
       icon: newExerciseDef.icon || 'Dumbbell',
-      image: '', // Скидаємо стару картинку
-      lastWeight: '', // Скидаємо старі рекорди
+      image: newExerciseDef.image || '', //
+      lastWeight: '',
       lastReps: '',
       suggestedWeight: '',
       weight: '',

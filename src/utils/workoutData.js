@@ -1,51 +1,49 @@
-import { loadHistory } from './storage';
-
 export const EXERCISE_DATABASE = {
   'Ноги': [
-    { name: 'Присідання зі штангою', icon: 'Dumbbell', image: 'Squats.jpg' },
-    { name: 'Жим ногами', icon: 'Dumbbell', image: 'Leg_press.jpg' },
-    { name: 'Розгинання ніг сидячи', icon: 'Cable', image: 'Leg_extension.jpg' },
-    { name: 'Згинання ніг лежачи', icon: 'Cable', image: 'Leg_curl.jpg' },
-    { name: 'Випади з гантелями', icon: 'Dumbbell', image: 'Lunges.jpg' },
-    { name: 'Румунська тяга', icon: 'Dumbbell', image: 'Romanian_deadlift.jpg' },
+    { name: 'Присідання зі штангою', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Barbell_squats.jpg' },
+    { name: 'Жим ногами', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Leg_press_on_the_machine.jpg' },
+    { name: 'Розгинання ніг сидячи', icon: 'Cable', image: 'images/Legs-and-Shoulders/Seated_leg_extensions.jpg' },
+    { name: 'Згинання ніг лежачи', icon: 'Cable', image: 'images/Legs-and-Shoulders/Lying_leg_curls.jpg' },
+    { name: 'Випади з гантелями', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Lunges.jpg' }, // Якщо файлу ще немає, додай його з такою назвою
+    { name: 'Румунська тяга', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Romanian_deadlift.jpg' }
   ],
   'Плечі': [
-    { name: 'Армійський жим стоячи', icon: 'Dumbbell', image: 'Military_press.jpg' },
-    { name: 'Жим гантелей сидячи', icon: 'Dumbbell', image: 'Seated_dumbbell_press.jpg' },
-    { name: 'Махи гантелями в сторони', icon: 'Dumbbell', image: 'Lateral_raises.jpg' },
-    { name: 'Тяга штанги до підборіддя', icon: 'Dumbbell', image: 'Upright_row.jpg' },
-    { name: 'Махи в нахилі (задня дельта)', icon: 'Dumbbell', image: 'Reverse_flyes.jpg' },
-    { name: 'Жим в тренажері Сміта', icon: 'Dumbbell', image: 'Smith_machine_press.jpg' }
+    { name: 'Армійський жим стоячи', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Standing_military_press.jpg' },
+    { name: 'Жим гантелей сидячи', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Seated_dumbbell_press.jpg' },
+    { name: 'Махи гантелями в сторони', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Dumbbell_Lateral_Raises.jpg' },
+    { name: 'Тяга штанги до підборіддя', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Barbell_chin-ups.jpg' },
+    { name: 'Махи в нахилі (задня дельта)', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Reverse_flyes.jpg' },
+    { name: 'Жим в тренажері Сміта', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Smith_machine_press.jpg' }
   ],
   'Груди': [
-    { name: 'Жим штанги лежачи', icon: 'Dumbbell', image: 'Bench_press.jpg' },
-    { name: 'Жим гантелей на похилій лаві', icon: 'Dumbbell', image: 'Incline_dumbbell_press.jpg' },
-    { name: 'Розведення гантелей лежачи', icon: 'Dumbbell', image: 'Dumbbell_flyes.jpg' },
-    { name: 'Зведення рук у кросовері', icon: 'Cable', image: 'Cable_crossover.jpg' },
-    { name: 'Віджимання на брусах', icon: 'Dumbbell', image: 'Dips.jpg' },
-    { name: 'Жим у тренажері (Хаммер)', icon: 'Cable', image: 'Hammer_press.jpg' }
+    { name: 'Жим штанги лежачи', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Bench_press.jpg' },
+    { name: 'Жим гантелей на похилій лаві', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Incline_Dumbbell_Press.jpg' },
+    { name: 'Розведення гантелей лежачи', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Lying_dumbbell_flyes.jpg' },
+    { name: 'Зведення рук у кросовері', icon: 'Cable', image: 'images/Chest-and-Biceps/Crossover_arm_reduction.jpg' },
+    { name: 'Віджимання на брусах', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Dips.jpg' },
+    { name: 'Жим у тренажері (Хаммер)', icon: 'Cable', image: 'images/Chest-and-Biceps/Hammer_press.jpg' }
   ],
   'Біцепс': [
-    { name: 'Підйом штанги на біцепс', icon: 'Dumbbell', image: 'Barbell_curl.jpg' },
-    { name: 'Підйом гантелей із супінацією', icon: 'Dumbbell', image: 'Dumbbell_curl.jpg' },
-    { name: 'Лава Скотта (EZ-штанга)', icon: 'Dumbbell', image: 'Preacher_curl.jpg' },
-    { name: '«Молотки» з гантелями', icon: 'Dumbbell', image: 'Hammer_curl.jpg' },
-    { name: 'Згинання рук у нижньому блоці', icon: 'Cable', image: 'Cable_curl.jpg' }
+    { name: 'Підйом штанги на біцепс', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Barbell_bicep-curl.jpg' },
+    { name: 'Підйом гантелей із супінацією', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Dumbbell-Supination_Curls.jpg' },
+    { name: 'Лава Скотта (EZ-штанга)', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Scott_Bench_(EZ-bar).jpg' },
+    { name: '«Молотки» з гантелями', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Dumbbell_hammer_curls.jpg' },
+    { name: 'Згинання рук у нижньому блоці', icon: 'Cable', image: 'images/Chest-and-Biceps/Cable_curl.jpg' }
   ],
   'Спина': [
-    { name: 'Підтягування широким хватом', icon: 'Dumbbell', image: 'Pull_ups.jpg' },
-    { name: 'Тяга штанги в нахилі', icon: 'Dumbbell', image: 'Bent_over_row.jpg' },
-    { name: 'Тяга нижнього блоку до пояса', icon: 'Cable', image: 'Seated_cable_row.jpg' },
-    { name: 'Тяга гантелі однією рукою', icon: 'Dumbbell', image: 'One_arm_dumbbell_row.jpg' },
-    { name: 'Тяга верхнього блоку', icon: 'Cable', image: 'Lat_pulldown.jpg' },
-    { name: 'Пуловер у кросовері', icon: 'Cable', image: 'Cable_pullover.jpg' }
+    { name: 'Підтягування широким хватом', icon: 'Dumbbell', image: 'images/Back-and-Triceps/Wide-grip_pull-ups.jpg' },
+    { name: 'Тяга штанги в нахилі', icon: 'Dumbbell', image: 'images/Back-and-Triceps/Bent-over_barbell_row.jpg' },
+    { name: 'Тяга нижнього блоку до пояса', icon: 'Cable', image: 'images/Back-and-Triceps/Low_block_pulldown_to_the_waist.jpg' },
+    { name: 'Тяга гантелі однією рукою', icon: 'Dumbbell', image: 'images/Back-and-Triceps/One-arm dumbbell_row.jpg' },
+    { name: 'Тяга верхнього блоку', icon: 'Cable', image: 'images/Back-and-Triceps/Lat_pulldown.jpg' },
+    { name: 'Пуловер у кросовері', icon: 'Cable', image: 'images/Back-and-Triceps/Cable_pullover.jpg' }
   ],
   'Трицепс': [
-    { name: 'Жим вузьким хватом лежачи', icon: 'Dumbbell', image: 'Close_grip_bench_press.jpg' },
-    { name: 'Французький жим EZ-штангою', icon: 'Dumbbell', image: 'French_press.jpg' },
-    { name: 'Розгинання на блоці з канатом', icon: 'Cable', image: 'Triceps_pushdown.jpg' },
-    { name: 'Розгинання гантелі з-за голови', icon: 'Dumbbell', image: 'Overhead_extension.jpg' },
-    { name: 'Віджимання від лави ззаду', icon: 'Dumbbell', image: 'Bench_dips.jpg' }
+    { name: 'Жим вузьким хватом лежачи', icon: 'Dumbbell', image: 'images/Back-and-Triceps/Close-grip_bench_press.jpg' },
+    { name: 'Французький жим EZ-штангою', icon: 'Dumbbell', image: 'images/Back-and-Triceps/EZ-Bar_French_Press.jpg' },
+    { name: 'Розгинання на блоці з канатом', icon: 'Cable', image: 'images/Back-and-Triceps/Cable_Pushdowns.jpg' },
+    { name: 'Розгинання гантелі з-за голови', icon: 'Dumbbell', image: 'images/Back-and-Triceps/Overhead_Dumbbell_Extension.jpg' },
+    { name: 'Віджимання від лави ззаду', icon: 'Dumbbell', image: 'images/Back-and-Triceps/Bench_dips.jpg' }
   ]
 };
 
