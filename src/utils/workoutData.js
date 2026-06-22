@@ -15,7 +15,7 @@ export const EXERCISE_DATABASE = {
     { name: 'Махи гантелями в сторони', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Dumbbell_Lateral_Raises.jpg' },
     { name: 'Тяга штанги до підборіддя', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Barbell_chin-ups.jpg' },
     { name: 'Махи в нахилі (задня дельта)', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Reverse_flyes.jpg' },
-    { name: 'Жим в тренажері Сміта', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Smith_machine_press.jpg' }
+    { name: 'Підняття гантелей перед собою', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Lifting_dumbbells_in_front_of_you.jpg' }
   ],
   'Груди': [
     { name: 'Жим штанги лежачи', icon: 'Dumbbell', image: 'images/Chest-and-Biceps/Bench_press.jpg' },
