@@ -1,3 +1,5 @@
+import { loadHistory } from './storage';
+
 export const EXERCISE_DATABASE = {
   'Ноги': [
     { name: 'Присідання зі штангою', icon: 'Dumbbell', image: 'images/Legs-and-Shoulders/Barbell_squats.jpg' },
